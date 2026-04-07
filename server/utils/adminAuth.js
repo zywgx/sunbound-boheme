@@ -85,17 +85,25 @@ export function getSessionToken(req) {
   return cookies[SESSION_COOKIE]
 }
 
+function buildSessionCookie(token, maxAgeSeconds) {
+  const isProduction = process.env.NODE_ENV === 'production'
+  const sameSite = isProduction ? 'None' : 'Lax'
+  const secure = isProduction ? '; Secure' : ''
+
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; HttpOnly; Path=/; Max-Age=${maxAgeSeconds}; SameSite=${sameSite}${secure}`
+}
+
 export function setSessionCookie(res, token) {
   res.setHeader(
     'Set-Cookie',
-    `${SESSION_COOKIE}=${encodeURIComponent(token)}; HttpOnly; Path=/; Max-Age=${SESSION_TTL_MS / 1000}; SameSite=Lax`
+    buildSessionCookie(token, SESSION_TTL_MS / 1000)
   )
 }
 
 export function clearSessionCookie(res) {
   res.setHeader(
     'Set-Cookie',
-    `${SESSION_COOKIE}=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax`
+    buildSessionCookie('', 0)
   )
 }
 
