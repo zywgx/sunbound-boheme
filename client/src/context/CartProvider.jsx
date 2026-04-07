@@ -76,6 +76,7 @@ export function CartProvider({ children }) {
   }
 
   function clearCart() {
+    localStorage.removeItem('sunbound-cart')
     setCartItems([])
   }
 

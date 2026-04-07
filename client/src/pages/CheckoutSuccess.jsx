@@ -9,6 +9,13 @@ function CheckoutSuccess() {
   const [searchParams] = useSearchParams()
 
   useEffect(() => {
+    function clearCheckoutState() {
+      localStorage.removeItem('checkout_cart')
+      localStorage.removeItem('checkout_total')
+      localStorage.removeItem('sunbound-cart')
+      clearCart()
+    }
+
     async function saveOrder() {
       if (hasSaved.current) return
       hasSaved.current = true
@@ -18,7 +25,12 @@ function CheckoutSuccess() {
         const storedTotal = JSON.parse(localStorage.getItem('checkout_total') || '0')
         const checkoutSessionId = searchParams.get('session_id')
 
-        if (!storedCart.length) return
+        if (!checkoutSessionId) return
+
+        if (!storedCart.length) {
+          clearCheckoutState()
+          return
+        }
 
         const response = await fetch(buildApiUrl('/orders'), {
           method: 'POST',
@@ -37,10 +49,7 @@ function CheckoutSuccess() {
           throw new Error(data.error || 'Could not save the order.')
         }
 
-        localStorage.removeItem('checkout_cart')
-        localStorage.removeItem('checkout_total')
-
-        clearCart()
+        clearCheckoutState()
       } catch (error) {
         console.error('Order save failed:', error)
       }
