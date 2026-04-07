@@ -4,83 +4,85 @@ function Policies() {
       <div className="container policy-page">
         <h1>Policies</h1>
         <p className="section-subtext">
-          We want every customer to love their purchase. Because many of our
-          items are curated resale, vintage, or limited-stock pieces, returns
-          and refunds are handled on a case-by-case basis.
+          These policies are written to be clear, fair, and realistic for a
+          small family-run shop with limited-stock pieces.
         </p>
 
         <div className="policy-stack">
           <div className="policy-card">
-            <h2>Item Condition</h2>
+            <h2>Shipping Policy</h2>
             <p>
-              Many SUNBOUND BOHEME items are resale, vintage, or pre-loved.
-              Minor signs of wear may be present. We do our best to accurately
-              describe and photograph each item so customers understand the
-              condition before purchase.
+              Ready-to-ship orders are usually packed within 2-4 business days.
+              Delivery timing depends on the shipping option selected at
+              checkout. Once an order is marked shipped, you will receive the
+              tracking details if available.
             </p>
           </div>
 
           <div className="policy-card">
-            <h2>Returns & Refunds</h2>
+            <h2>Address Accuracy</h2>
             <p>
-              Not all purchases are eligible for return or refund. All return,
-              refund, and exchange requests are reviewed individually based on
-              the specific situation.
+              Customers are responsible for entering the correct shipping
+              address at checkout. If you notice an address issue, contact us as
+              quickly as possible. We cannot guarantee changes once an order has
+              already been packed or shipped.
+            </p>
+          </div>
+
+          <div className="policy-card">
+            <h2>Returns & Exchanges</h2>
+            <p>
+              Because many SUNBOUND BOHEME items are one-of-one, vintage,
+              resale, or limited-run pieces, returns and exchanges are reviewed
+              case by case. Approval depends on item condition, listing
+              accuracy, and the reason for the request.
             </p>
           </div>
 
           <div className="policy-card">
             <h2>Return Window</h2>
             <p>
-              Return requests should be submitted within 7 days of confirmed
-              delivery unless otherwise stated. Requests made outside that window
-              may be denied.
+              If your order may qualify for a return, please contact us within 7
+              days of confirmed delivery. Approved returns must be sent back in
+              the same condition in which they were received.
             </p>
           </div>
 
           <div className="policy-card">
-            <h2>Returned Item Condition</h2>
+            <h2>Damaged or Incorrect Orders</h2>
             <p>
-              Approved returns must be sent back in the same condition in which
-              they were received. Items returned worn, washed, altered, damaged,
-              or missing parts may be denied a refund or may only qualify for a
-              partial refund.
+              If something arrives damaged beyond the description provided, or
+              you receive the wrong item, contact us with clear photos of the
+              item and packaging. We will review the situation and work toward a
+              fair resolution.
             </p>
           </div>
 
           <div className="policy-card">
-            <h2>Damaged or Incorrect Items</h2>
+            <h2>Privacy</h2>
             <p>
-              If you receive an item that is significantly damaged beyond what
-              was described, or if you receive the wrong item, please contact us
-              promptly with clear photos of the item and packaging. We will
-              review the issue and determine the appropriate resolution.
+              We use the information you provide at checkout to process orders,
+              communicate about purchases, and provide support. Payment details
+              are handled by Stripe. We do not sell customer information.
             </p>
           </div>
 
           <div className="policy-card">
-            <h2>Shipping Costs</h2>
+            <h2>Email Communication</h2>
             <p>
-              Original shipping charges may be non-refundable unless the issue
-              was caused by our error.
-            </p>
-          </div>
-
-          <div className="policy-card">
-            <h2>Refund Decisions</h2>
-            <p>
-              SUNBOUND BOHEME reserves the right to approve, deny, or partially
-              refund any request based on listing accuracy, item condition,
-              evidence provided, and the full circumstances of the situation.
+              If email notifications are enabled, we may send order
+              confirmations, shipping updates, or support follow-ups related to
+              your purchase. These emails are transactional, not a marketing
+              newsletter.
             </p>
           </div>
 
           <div className="policy-card">
             <h2>Policy Abuse</h2>
             <p>
-              We reserve the right to deny returns, refunds, service, or future
-              purchases in cases of suspected fraud, repeated abuse, dishonest
-              claims, or misuse of store policies.
+              We reserve the right to deny returns, refunds, or future orders in
+              cases of suspected fraud, repeated abuse, dishonest claims, or
+              misuse of store policies.
             </p>
           </div>
         </div>

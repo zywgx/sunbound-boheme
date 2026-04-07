@@ -2,31 +2,38 @@ function Support() {
   return (
     <section className="section">
       <div className="container policy-page">
-        <h1>Support</h1>
+        <h1>About & Contact</h1>
         <p className="section-subtext">
-          We want you to feel good about your SUNBOUND BOHEME purchase. If you
-          need help with an order, shipping issue, damaged item, or return
-          request, we’re here to help review the situation fairly.
+          SUNBOUND BOHEME is a family-run shop built around curated pieces,
+          one-off finds, and personal style. If you have a question about an
+          item or an order, we want it to feel easy to reach a real person.
         </p>
 
         <div className="policy-grid">
           <div className="policy-card">
+            <h2>Our Story</h2>
+            <p>
+              We focus on pieces that feel expressive, wearable, and a little
+              unexpected. Many items are limited runs, vintage, resale, or
+              single-stock finds, which means each order gets a more hands-on
+              level of care.
+            </p>
+          </div>
+
+          <div className="policy-card">
             <h2>How We Can Help</h2>
             <ul className="policy-list">
-              <li>Questions about an item before or after purchase</li>
-              <li>Order status and shipping concerns</li>
-              <li>Damaged package or damaged item claims</li>
-              <li>Return and refund requests</li>
-              <li>Issues with receiving the wrong item</li>
+              <li>Sizing or fit questions before purchase</li>
+              <li>Order updates and shipping questions</li>
+              <li>Damage or incorrect-item support</li>
+              <li>Returns and exchange review</li>
+              <li>General brand or collaboration inquiries</li>
             </ul>
           </div>
 
           <div className="policy-card">
-            <h2>Before You Contact Us</h2>
-            <p>
-              To help us resolve your issue as quickly as possible, please
-              include:
-            </p>
+            <h2>Before You Reach Out</h2>
+            <p>To help us respond faster, include:</p>
             <ul className="policy-list">
               <li>Your order number</li>
               <li>The item name</li>
@@ -38,32 +45,31 @@ function Support() {
           <div className="policy-card">
             <h2>Response Time</h2>
             <p>
-              Please allow 1–3 business days for a response. During busy periods,
-              response times may be slightly longer.
+              Please allow 1-3 business days for a response. We do our best to
+              answer faster when a package issue or delivery problem is time
+              sensitive.
             </p>
           </div>
 
           <div className="policy-card">
-            <h2>Our Goal</h2>
+            <h2>What To Expect</h2>
             <p>
-              We want customers to be happy with their order while also
-              protecting the integrity of our business and inventory. Every case
-              is reviewed individually so we can be as fair as possible.
+              Because many pieces are one-of-one, we review each issue carefully
+              and try to be fair, clear, and practical. If something went wrong,
+              we want to work toward a reasonable solution.
             </p>
           </div>
         </div>
 
         <div className="policy-card support-contact-box">
-          <h2>Contact Support</h2>
+          <h2>Contact</h2>
           <p>
-            For now, support requests can be handled through your business email
-            or contact form once added to the site.
+            For now, the best way to reach us is by email. You can replace the
+            sample details below with your live business contact once ready.
           </p>
-          <p>
-            Example:
-            <br />
-            <strong>support@sunboundboheme.com</strong>
-          </p>
+          <p><strong>Email:</strong> support@sunboundboheme.com</p>
+          <p><strong>Instagram:</strong> @sunboundboheme</p>
+          <p><strong>Hours:</strong> Monday-Friday, 10am-5pm Eastern</p>
         </div>
       </div>
     </section>

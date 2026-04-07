@@ -8,6 +8,8 @@ import Cart from './pages/Cart'
 import Support from './pages/Support'
 import Policies from './pages/Policies'
 import Admin from './pages/Admin'
+import CheckoutSuccess from './pages/CheckoutSuccess'
+import CheckoutCancel from './pages/CheckoutCancel'
 
 function App() {
   return (
@@ -22,7 +24,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/support" element={<Support />} />
           <Route path="/policies" element={<Policies />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/alliesthrone" element={<Admin />} />
+          <Route path="/checkout-success" element={<CheckoutSuccess />} />
+          <Route path="/checkout-cancel" element={<CheckoutCancel />} />
         </Routes>
       </main>
 

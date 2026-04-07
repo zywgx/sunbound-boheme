@@ -4,16 +4,61 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  price       Float
-  description String
-  imageUrl    String
-  category    String
-  quantity    Int
-  createdAt   DateTime @default(now())
+  id                    Int      @id @default(autoincrement())
+  name                  String
+  slug                  String?  @unique
+  price                 Float
+  description           String
+  imageUrl              String
+  category              String
+  quantity              Int
+  shippingProfile       String   @default("standard")
+  shippingCustomAmount  Float?
+  createdAt             DateTime @default(now())
+}
+
+model Order {
+  id                  Int         @id @default(autoincrement())
+  stripeSessionId     String?     @unique
+  total               Float
+  status              String      @default("new")
+  trackingNumber      String?
+  adminNotes          String?
+  customerName        String?
+  customerEmail       String?
+  shippingLine1       String?
+  shippingLine2       String?
+  shippingCity        String?
+  shippingState       String?
+  shippingPostalCode  String?
+  shippingCountry     String?
+  fulfilledAt         DateTime?
+  shippedAt           DateTime?
+  createdAt           DateTime    @default(now())
+  items               OrderItem[]
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int?
+  name      String
+  price     Float
+  quantity  Int
+  imageUrl  String?
+  category  String?
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model StoreSettings {
+  id                       Int      @id @default(1)
+  standardShippingRate     Float    @default(6.95)
+  heavyShippingRate        Float    @default(12.95)
+  priorityShippingSurcharge Float   @default(6.0)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
 }

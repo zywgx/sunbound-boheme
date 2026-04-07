@@ -4,6 +4,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
+    "hash:admin": "node scripts/hash-password.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,6 +17,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.1",
     "express": "^5.2.1",
-    "prisma": "^5.22.0"
+    "nodemailer": "^7.0.10",
+    "prisma": "^5.22.0",
+    "stripe": "^22.0.0"
   }
 }

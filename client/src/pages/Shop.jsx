@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../components/ProductCard'
+import { buildApiUrl } from '../lib/api'
 
-const API_URL = 'http://localhost:5000/products'
+const API_URL = buildApiUrl('/products')
 
 function Shop() {
   const [products, setProducts] = useState([])
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
   const [loading, setLoading] = useState(true)
-
-  const categories = ['All', 'Women', 'Accessories', 'Outerwear', 'Shoes']
 
   useEffect(() => {
     async function fetchProducts() {
@@ -38,12 +37,14 @@ function Shop() {
     return matchesSearch && matchesCategory
   })
 
+  const categories = ['All', ...new Set(products.map((product) => product.category).filter(Boolean))]
+
   return (
     <section className="section">
       <div className="container">
         <h1>Shop</h1>
         <p className="section-subtext">
-          Explore the SUNBOUND BOHEME collection.
+          Explore the current SUNBOUND BOHEME edit of vintage-inspired, one-of-a-kind finds.
         </p>
 
         <input
@@ -75,7 +76,7 @@ function Shop() {
                 <ProductCard key={product.id} product={product} compact />
               ))
             ) : (
-              <p className="no-results">No items found.</p>
+              <p className="no-results">No pieces match that search right now.</p>
             )}
           </div>
         )}

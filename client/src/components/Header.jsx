@@ -1,8 +1,52 @@
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useCart } from '../context/useCart'
+import { buildApiUrl } from '../lib/api'
+
+const AUTH_STATUS_URL = buildApiUrl('/auth/status')
 
 function Header() {
   const { cartCount } = useCart()
+  const location = useLocation()
+  const [showAdmin, setShowAdmin] = useState(false)
+
+  useEffect(() => {
+    let active = true
+
+    async function loadAuthStatus() {
+      try {
+        const response = await fetch(AUTH_STATUS_URL, {
+          credentials: 'include',
+        })
+
+        if (!response.ok) {
+          throw new Error('Unable to check admin status')
+        }
+
+        const data = await response.json()
+
+        if (active) {
+          setShowAdmin(Boolean(data.authenticated))
+        }
+      } catch {
+        if (active) {
+          setShowAdmin(false)
+        }
+      }
+    }
+
+    function handleAuthChange() {
+      loadAuthStatus()
+    }
+
+    loadAuthStatus()
+    window.addEventListener('admin-auth-changed', handleAuthChange)
+
+    return () => {
+      active = false
+      window.removeEventListener('admin-auth-changed', handleAuthChange)
+    }
+  }, [location.pathname])
 
   return (
     <header className="site-header">
@@ -16,7 +60,7 @@ function Header() {
           <Link to="/shop">Shop</Link>
           <Link to="/support">Support</Link>
           <Link to="/policies">Policies</Link>
-          <Link to="/admin">Admin</Link>
+          {showAdmin && <Link to="/alliesthrone">Admin</Link>}
           <Link to="/cart" className="cart-link">
             Cart
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}

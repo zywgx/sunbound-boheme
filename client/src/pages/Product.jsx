@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useCart } from '../context/useCart'
+import { FALLBACK_PRODUCT_IMAGE } from '../utils/productDisplay'
+import { buildApiUrl } from '../lib/api'
 
 function Product() {
   const { id } = useParams()
@@ -16,7 +18,7 @@ function Product() {
       try {
         setLoading(true)
         setError('')
-        const response = await axios.get(`http://localhost:5000/products/${id}`)
+        const response = await axios.get(buildApiUrl(`/products/${id}`))
         setProduct(response.data)
       } catch (err) {
         console.error('Failed to fetch product:', err)
@@ -52,6 +54,8 @@ function Product() {
     )
   }
 
+  const isOutOfStock = product.quantity <= 0
+
   return (
     <section className="section">
       <div className="container product-page">
@@ -60,6 +64,10 @@ function Product() {
             src={product.imageUrl}
             alt={product.name}
             className="product-detail-image"
+            onError={(event) => {
+              event.currentTarget.onerror = null
+              event.currentTarget.src = FALLBACK_PRODUCT_IMAGE
+            }}
           />
         </div>
 
@@ -75,8 +83,9 @@ function Product() {
           <button
             className="btn product-btn"
             onClick={() => addToCart(product)}
+            disabled={isOutOfStock}
           >
-            Add to Cart
+            {isOutOfStock ? 'Sold Out' : 'Add to Cart'}
           </button>
 
           <div className="product-info-box">
@@ -86,7 +95,7 @@ function Product() {
           </div>
 
           <Link to="/shop" className="back-link">
-            ← Back to Shop
+            {'<- Back to Shop'}
           </Link>
         </div>
       </div>

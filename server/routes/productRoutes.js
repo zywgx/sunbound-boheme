@@ -1,18 +1,40 @@
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
+import { requireAdmin } from '../utils/adminAuth.js'
 
 const router = express.Router()
 
-const prisma = new PrismaClient({
-  __internal: {
-    configOverride: (config) => ({
-      ...config,
-      datasource: {
-        url: "file:./prisma/dev.db",
+const prisma = new PrismaClient()
+
+function slugify(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+async function getUniqueSlug(baseValue, excludeId) {
+  const baseSlug = slugify(baseValue) || `product-${Date.now()}`
+  let candidate = baseSlug
+  let suffix = 2
+
+  while (true) {
+    const existingProduct = await prisma.product.findFirst({
+      where: {
+        slug: candidate,
+        ...(excludeId ? { NOT: { id: excludeId } } : {}),
       },
-    }),
-  },
-})
+    })
+
+    if (!existingProduct) {
+      return candidate
+    }
+
+    candidate = `${baseSlug}-${suffix}`
+    suffix += 1
+  }
+}
 
 router.get('/', async (req, res) => {
   try {
@@ -28,11 +50,16 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const id = Number(req.params.id)
+    const rawId = req.params.id
+    const numericId = Number(rawId)
 
-    const product = await prisma.product.findUnique({
-      where: { id },
-    })
+    const product = Number.isNaN(numericId)
+      ? await prisma.product.findUnique({
+          where: { slug: rawId },
+        })
+      : await prisma.product.findUnique({
+          where: { id: numericId },
+        })
 
     if (!product) {
       return res.status(404).json({ error: 'Product not found' })
@@ -45,18 +72,37 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', requireAdmin, async (req, res) => {
   try {
-    const { name, price, description, imageUrl, category, quantity } = req.body
+    const {
+      name,
+      price,
+      description,
+      imageUrl,
+      category,
+      quantity,
+      slug,
+      shippingProfile,
+      shippingCustomAmount,
+    } = req.body
+    const resolvedSlug = await getUniqueSlug(slug || name)
 
     const newProduct = await prisma.product.create({
       data: {
         name,
+        slug: resolvedSlug,
         price: Number(price),
         description,
         imageUrl,
         category,
         quantity: Number(quantity),
+        shippingProfile: shippingProfile || 'standard',
+        shippingCustomAmount:
+          shippingCustomAmount === '' ||
+          shippingCustomAmount === null ||
+          shippingCustomAmount === undefined
+            ? null
+            : Number(shippingCustomAmount),
       },
     })
 
@@ -67,10 +113,20 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireAdmin, async (req, res) => {
   try {
     const id = Number(req.params.id)
-    const { name, price, description, imageUrl, category, quantity } = req.body
+    const {
+      name,
+      price,
+      description,
+      imageUrl,
+      category,
+      quantity,
+      slug,
+      shippingProfile,
+      shippingCustomAmount,
+    } = req.body
 
     const existingProduct = await prisma.product.findUnique({
       where: { id },
@@ -84,11 +140,19 @@ router.put('/:id', async (req, res) => {
       where: { id },
       data: {
         name,
+        slug: await getUniqueSlug(slug || name, id),
         price: Number(price),
         description,
         imageUrl,
         category,
         quantity: Number(quantity),
+        shippingProfile: shippingProfile || 'standard',
+        shippingCustomAmount:
+          shippingCustomAmount === '' ||
+          shippingCustomAmount === null ||
+          shippingCustomAmount === undefined
+            ? null
+            : Number(shippingCustomAmount),
       },
     })
 
@@ -99,7 +163,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAdmin, async (req, res) => {
   try {
     const id = Number(req.params.id)
 
