@@ -117,6 +117,13 @@ img {
   overflow: hidden;
 }
 
+.hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.75fr);
+  gap: 1.6rem;
+  align-items: start;
+}
+
 .hero-content {
   max-width: 760px;
   position: relative;
@@ -336,6 +343,10 @@ img {
     gap: 0.8rem;
   }
 
+  .hero-layout {
+    grid-template-columns: 1fr;
+  }
+
   .product-page {
     grid-template-columns: 1fr;
   }
@@ -495,6 +506,32 @@ img {
 .no-results {
   margin-top: 2rem;
   opacity: 0.7;
+}
+
+.shop-results-note {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 250, 244, 0.8);
+  border: 1px solid rgba(62, 44, 35, 0.08);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.shop-empty-state {
+  padding: 2rem;
+  border-radius: calc(var(--radius) + 4px);
+  background: rgba(255, 250, 244, 0.86);
+  border: 1px solid rgba(62, 44, 35, 0.08);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.shop-empty-state h2 {
+  margin-bottom: 0.45rem;
+}
+
+.shop-empty-state p {
+  opacity: 0.78;
 }
 
 .product-card-link {
@@ -725,6 +762,46 @@ img {
 
 .cart-empty p {
   margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.checkout-state-shell {
+  max-width: 760px;
+}
+
+.checkout-state-card {
+  padding: 2.1rem;
+  border-radius: calc(var(--radius) + 8px);
+  background:
+    radial-gradient(circle at top right, rgba(111, 127, 93, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 251, 246, 0.96), rgba(248, 236, 220, 0.92));
+  border: 1px solid rgba(62, 44, 35, 0.1);
+  box-shadow: var(--shadow);
+}
+
+.checkout-state-card-cancel {
+  background:
+    radial-gradient(circle at top right, rgba(217, 119, 66, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 251, 246, 0.96), rgba(248, 236, 220, 0.92));
+}
+
+.checkout-state-notes {
+  display: grid;
+  gap: 0.85rem;
+  margin-bottom: 1.6rem;
+}
+
+.checkout-state-note {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.05rem;
+  border-radius: 16px;
+  background: rgba(255, 250, 244, 0.78);
+  border: 1px solid rgba(62, 44, 35, 0.08);
+}
+
+.checkout-state-note span {
+  font-size: 0.94rem;
   opacity: 0.8;
 }
 
@@ -1509,78 +1586,115 @@ img {
 .hero-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.15rem;
+  align-items: stretch;
 }
 
 .hero-stat {
-  background: rgba(255, 250, 244, 0.62);
-  border: 1px solid rgba(62, 44, 35, 0.08);
+  background: rgba(242, 229, 212, 0.82);
+  border: 1px solid rgba(62, 44, 35, 0.1);
   border-radius: var(--radius);
-  padding: 1rem 1.1rem;
-  backdrop-filter: blur(6px);
+  padding: 1.25rem 1.25rem 1.15rem;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .hero-stat strong {
   display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.45rem;
+  font-size: 1.15rem;
 }
 
 .hero-stat span {
   display: block;
-  font-size: 0.92rem;
-  opacity: 0.88;
+  font-size: 1rem;
+  line-height: 1.45;
+  opacity: 0.9;
 }
 
 .hero-atmosphere {
-  margin-top: 2.2rem;
-  min-height: 220px;
+  min-height: 540px;
   border-radius: calc(var(--radius) + 10px);
   border: 1px solid rgba(62, 44, 35, 0.08);
   background:
-    linear-gradient(160deg, rgba(255, 250, 244, 0.78), rgba(245, 230, 211, 0.7)),
+    linear-gradient(165deg, rgba(84, 55, 42, 0.98), rgba(51, 35, 28, 0.98)),
     repeating-linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.18),
-      rgba(255, 255, 255, 0.18) 18px,
-      rgba(233, 212, 186, 0.12) 18px,
-      rgba(233, 212, 186, 0.12) 36px
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.04) 18px,
+      rgba(214, 174, 138, 0.03) 18px,
+      rgba(214, 174, 138, 0.03) 36px
     );
   box-shadow: var(--shadow);
   position: relative;
   overflow: hidden;
 }
 
+.hero-editorial-card {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: min(260px, calc(100% - 3rem));
+  padding: 1.25rem 1.3rem;
+  border-radius: calc(var(--radius) + 4px);
+  background: rgba(66, 44, 35, 0.78);
+  border: 1px solid rgba(255, 245, 235, 0.08);
+  box-shadow: none;
+}
+
+.hero-editorial-label {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  color: rgba(255, 240, 228, 0.68);
+}
+
+.hero-editorial-card h2 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+  margin-bottom: 0.55rem;
+  color: rgba(255, 244, 235, 0.96);
+}
+
+.hero-editorial-card p {
+  color: rgba(255, 240, 228, 0.84);
+}
+
 .hero-orbit {
   position: absolute;
   border-radius: 999px;
-  border: 1px solid rgba(95, 75, 62, 0.16);
-  background: radial-gradient(circle, rgba(255, 250, 244, 0.88), rgba(233, 212, 186, 0.2));
+  border: 1px solid rgba(255, 245, 235, 0.12);
+  background: radial-gradient(circle, rgba(216, 174, 133, 0.2), rgba(233, 212, 186, 0.02));
 }
 
 .hero-orbit-one {
   width: 220px;
   height: 220px;
-  right: -36px;
-  top: -48px;
+  right: -34px;
+  top: -24px;
 }
 
 .hero-orbit-two {
   width: 150px;
   height: 150px;
-  left: 12%;
-  bottom: -38px;
+  left: 16%;
+  top: 42%;
 }
 
 .hero-manifesto {
   position: absolute;
-  left: 2rem;
-  bottom: 1.8rem;
-  width: min(360px, calc(100% - 4rem));
-  padding: 1.1rem 1.2rem;
-  border-radius: 18px;
-  background: rgba(255, 250, 244, 0.82);
-  border: 1px solid rgba(62, 44, 35, 0.08);
-  backdrop-filter: blur(8px);
+  top: 1.5rem;
+  left: 1.5rem;
+  width: min(240px, calc(100% - 3rem));
+  padding: 1rem 1.05rem;
+  border-radius: 16px;
+  background: rgba(64, 42, 33, 0.72);
+  border: 1px solid rgba(255, 245, 235, 0.08);
+  text-align: center;
 }
 
 .hero-manifesto-label {
@@ -1589,21 +1703,29 @@ img {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-size: 0.78rem;
-  opacity: 0.76;
+  color: rgba(255, 240, 228, 0.7);
 }
 
 .hero-manifesto p {
   margin: 0;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(255, 244, 235, 0.92);
 }
 
 .collection-section {
   padding-bottom: 1rem;
 }
 
+.collection-intro {
+  max-width: 760px;
+  margin-bottom: 1.35rem;
+  font-size: 1rem;
+  opacity: 0.84;
+}
+
 .collection-card {
-  background: linear-gradient(180deg, rgba(255, 250, 244, 0.95), rgba(248, 237, 224, 0.95));
+  background: rgba(255, 250, 244, 0.92);
   border: 1px solid rgba(62, 44, 35, 0.08);
 }
 
@@ -1627,7 +1749,7 @@ img {
 }
 
 .story-copy {
-  background: rgba(255, 250, 244, 0.9);
+  background: rgba(255, 250, 244, 0.92);
   padding: 2rem;
   border: 1px solid rgba(62, 44, 35, 0.08);
 }
@@ -1696,7 +1818,7 @@ img {
 }
 
 .process-card {
-  background: rgba(255, 250, 244, 0.85);
+  background: rgba(255, 250, 244, 0.9);
   border-radius: var(--radius);
   border: 1px solid rgba(62, 44, 35, 0.08);
   padding: 1.4rem;
@@ -1719,13 +1841,39 @@ img {
   padding-top: 1rem;
 }
 
+.featured-callout {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.2rem;
+  border-radius: calc(var(--radius) + 2px);
+  background: rgba(255, 250, 244, 0.9);
+  border: 1px solid rgba(62, 44, 35, 0.08);
+  box-shadow: var(--shadow);
+}
+
+.featured-callout-label {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.78rem;
+  color: var(--clay);
+}
+
+.featured-callout p {
+  max-width: 56ch;
+  opacity: 0.82;
+}
+
 .closing-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  background:
-    linear-gradient(135deg, rgba(255, 250, 244, 0.92), rgba(236, 219, 196, 0.92));
+  background: rgba(255, 250, 244, 0.92);
   border-radius: calc(var(--radius) + 8px);
   padding: 2rem;
   border: 1px solid rgba(62, 44, 35, 0.08);
@@ -1749,6 +1897,28 @@ img {
   .process-grid,
   .closing-card {
     grid-template-columns: 1fr;
+  }
+
+  .featured-callout {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-manifesto,
+  .hero-editorial-card {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+    transform: none;
+  }
+
+  .hero-manifesto {
+    top: 1rem;
+  }
+
+  .hero-editorial-card {
+    bottom: 1rem;
   }
 
   .closing-card {

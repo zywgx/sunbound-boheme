@@ -42,10 +42,20 @@ function Shop() {
   return (
     <section className="section">
       <div className="container">
-        <h1>Shop</h1>
-        <p className="section-subtext">
-          Explore the current SUNBOUND BOHEME edit of vintage-inspired, one-of-a-kind finds.
-        </p>
+        <div className="section-heading">
+          <div>
+            <p className="section-label">Collection</p>
+            <h1>Shop</h1>
+            <p className="section-subtext">
+              Explore the current SUNBOUND BOHEME edit of vintage-inspired, one-of-a-kind finds.
+            </p>
+          </div>
+          {!loading && (
+            <p className="shop-results-note">
+              {filteredProducts.length} piece{filteredProducts.length === 1 ? '' : 's'} showing
+            </p>
+          )}
+        </div>
 
         <input
           type="text"
@@ -70,15 +80,18 @@ function Shop() {
         {loading ? (
           <p>Loading products...</p>
         ) : (
-          <div className="shop-grid">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
+          filteredProducts.length > 0 ? (
+            <div className="shop-grid">
+              {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} compact />
-              ))
-            ) : (
-              <p className="no-results">No pieces match that search right now.</p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+              <div className="shop-empty-state">
+                <h2>No pieces match that search right now.</h2>
+                <p>Try another keyword or clear the category filter to browse the full edit.</p>
+              </div>
+            )
         )}
       </div>
     </section>

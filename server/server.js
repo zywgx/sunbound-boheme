@@ -25,6 +25,7 @@ dotenv.config()
 const app = express()
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 const prisma = new PrismaClient()
+const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 const SHIPPING_COUNTRIES = ['US']
 const FRONTEND_URLS = [
   process.env.CLIENT_URL,
@@ -297,6 +298,153 @@ function buildDashboardMetrics(orders) {
   }
 }
 
+function serializeCartReference(items) {
+  return items.map((item) => `${item.id}:${item.quantity}`).join(',')
+}
+
+function parseCartReference(reference = '') {
+  return reference
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const [id, quantity] = entry.split(':')
+      return {
+        id: Number(id),
+        quantity: Number(quantity),
+      }
+    })
+    .filter((item) => Number.isInteger(item.id) && item.id > 0 && Number.isInteger(item.quantity) && item.quantity > 0)
+}
+
+async function createOrderRecord({
+  normalizedItems,
+  chargedTotal,
+  checkoutSessionId = null,
+  orderDetails,
+}) {
+  return prisma.$transaction(async (tx) => {
+    const products = await tx.product.findMany({
+      where: {
+        id: {
+          in: normalizedItems.map((item) => item.id),
+        },
+      },
+    })
+    const productMap = new Map(products.map((product) => [product.id, product]))
+
+    for (const item of normalizedItems) {
+      const product = productMap.get(item.id)
+
+      if (!product) {
+        throw new Error('One of the purchased products no longer exists.')
+      }
+
+      if (item.quantity <= 0) {
+        throw new Error('Invalid purchase quantity.')
+      }
+
+      if (product.quantity < item.quantity) {
+        throw new Error(`${product.name} is no longer available in that quantity.`)
+      }
+    }
+
+    for (const item of normalizedItems) {
+      const updateResult = await tx.product.updateMany({
+        where: {
+          id: item.id,
+          quantity: {
+            gte: item.quantity,
+          },
+        },
+        data: {
+          quantity: {
+            decrement: item.quantity,
+          },
+        },
+      })
+
+      if (updateResult.count === 0) {
+        const product = productMap.get(item.id)
+        throw new Error(`${product?.name || 'This item'} just sold out.`)
+      }
+    }
+
+    return tx.order.create({
+      data: {
+        stripeSessionId: checkoutSessionId,
+        total: chargedTotal,
+        status: 'new',
+        ...orderDetails,
+        items: {
+          create: normalizedItems.map((item) => {
+            const product = productMap.get(item.id)
+
+            return {
+              productId: product.id,
+              name: product.name,
+              price: Number(product.price),
+              quantity: Number(item.quantity),
+              imageUrl: product.imageUrl || null,
+              category: product.category || null,
+            }
+          }),
+        },
+      },
+      include: {
+        items: true,
+      },
+    })
+  })
+}
+
+async function fulfillCheckoutSession(checkoutSessionId, fallbackItems = []) {
+  if (!checkoutSessionId) {
+    throw new Error('Checkout session ID is required.')
+  }
+
+  const existingOrder = await prisma.order.findUnique({
+    where: { stripeSessionId: checkoutSessionId },
+    include: { items: true },
+  })
+
+  if (existingOrder) {
+    return { order: existingOrder, created: false }
+  }
+
+  const checkoutSession = await stripe.checkout.sessions.retrieve(checkoutSessionId)
+
+  if (!checkoutSession || checkoutSession.payment_status !== 'paid') {
+    throw new Error('Checkout session has not been paid yet.')
+  }
+
+  const metadataItems = parseCartReference(checkoutSession.metadata?.cart_reference || '')
+  const sourceItems = metadataItems.length > 0 ? metadataItems : fallbackItems
+
+  if (!sourceItems.length) {
+    throw new Error('No purchased items were found for this checkout session.')
+  }
+
+  const normalizedItems = sourceItems.map((item) => ({
+    id: Number(item.id),
+    quantity: Number(item.quantity),
+  }))
+
+  const order = await createOrderRecord({
+    normalizedItems,
+    chargedTotal: Number((checkoutSession.amount_total || 0) / 100),
+    checkoutSessionId,
+    orderDetails: getOrderDetailsFromSession(checkoutSession),
+  })
+
+  await Promise.allSettled([
+    sendCustomerOrderEmail(order),
+    sendInternalOrderNotification(order),
+  ])
+
+  return { order, created: true }
+}
+
 app.use(
   cors({
     origin(origin, callback) {
@@ -309,6 +457,42 @@ app.use(
     credentials: true,
   })
 )
+
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripeWebhookSecret) {
+    return res.status(503).send('Stripe webhook secret is not configured.')
+  }
+
+  const signature = req.headers['stripe-signature']
+
+  if (!signature) {
+    return res.status(400).send('Missing Stripe signature.')
+  }
+
+  let event
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, signature, stripeWebhookSecret)
+  } catch (error) {
+    console.error('Stripe webhook signature error:', error.message)
+    return res.status(400).send(`Webhook Error: ${error.message}`)
+  }
+
+  try {
+    if (
+      event.type === 'checkout.session.completed' ||
+      event.type === 'checkout.session.async_payment_succeeded'
+    ) {
+      await fulfillCheckoutSession(event.data.object.id)
+    }
+  } catch (error) {
+    console.error('Stripe webhook processing error:', error)
+    return res.status(500).send('Webhook handling failed.')
+  }
+
+  return res.json({ received: true })
+})
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -443,6 +627,9 @@ app.post('/create-checkout-session', async (req, res) => {
             name: product.name,
             images: product.imageUrl ? [product.imageUrl] : [],
             description: product.description || '',
+            metadata: {
+              productId: String(product.id),
+            },
           },
           unit_amount: Math.round(Number(product.price) * 100),
           tax_behavior: 'exclusive',
@@ -458,6 +645,9 @@ app.post('/create-checkout-session', async (req, res) => {
         allowed_countries: SHIPPING_COUNTRIES,
       },
       shipping_options: buildShippingOptions(standardShippingCents, settings),
+      metadata: {
+        cart_reference: serializeCartReference(requestedItems),
+      },
       success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.CLIENT_URL}/checkout-cancel`,
     })
@@ -473,27 +663,24 @@ app.post('/orders', async (req, res) => {
   try {
     const { cartItems, total, checkoutSessionId } = req.body
 
-    if (!cartItems || cartItems.length === 0) {
+    if ((!cartItems || cartItems.length === 0) && !checkoutSessionId) {
       return res.status(400).json({ error: 'No cart items provided.' })
     }
 
-    if (checkoutSessionId) {
-      const existingOrder = await prisma.order.findUnique({
-        where: { stripeSessionId: checkoutSessionId },
-        include: { items: true },
-      })
-
-      if (existingOrder) {
-        return res.status(200).json(existingOrder)
-      }
-    }
-
-    const normalizedItems = cartItems.map((item) => ({
+    const fallbackItems = (cartItems || []).map((item) => ({
       id: Number(item.id),
       quantity: Number(item.quantity),
     }))
-    let chargedTotal = Number(total)
-    let orderDetails = {
+    let order
+
+    if (checkoutSessionId) {
+      const result = await fulfillCheckoutSession(checkoutSessionId, fallbackItems)
+      return res.status(result.created ? 201 : 200).json(result.order)
+    }
+
+    const normalizedItems = fallbackItems
+    const chargedTotal = Number(total)
+    const orderDetails = {
       customerName: null,
       customerEmail: null,
       shippingLine1: null,
@@ -504,89 +691,11 @@ app.post('/orders', async (req, res) => {
       shippingCountry: null,
     }
 
-    if (checkoutSessionId) {
-      const checkoutSession = await stripe.checkout.sessions.retrieve(checkoutSessionId)
-
-      if (!checkoutSession || checkoutSession.payment_status !== 'paid') {
-        return res.status(400).json({ error: 'Checkout session has not been paid yet.' })
-      }
-
-      chargedTotal = Number((checkoutSession.amount_total || 0) / 100)
-      orderDetails = getOrderDetailsFromSession(checkoutSession)
-    }
-
-    const order = await prisma.$transaction(async (tx) => {
-      const products = await tx.product.findMany({
-        where: {
-          id: {
-            in: normalizedItems.map((item) => item.id),
-          },
-        },
-      })
-      const productMap = new Map(products.map((product) => [product.id, product]))
-
-      for (const item of normalizedItems) {
-        const product = productMap.get(item.id)
-
-        if (!product) {
-          throw new Error('One of the purchased products no longer exists.')
-        }
-
-        if (item.quantity <= 0) {
-          throw new Error('Invalid purchase quantity.')
-        }
-
-        if (product.quantity < item.quantity) {
-          throw new Error(`${product.name} is no longer available in that quantity.`)
-        }
-      }
-
-      for (const item of normalizedItems) {
-        const updateResult = await tx.product.updateMany({
-          where: {
-            id: item.id,
-            quantity: {
-              gte: item.quantity,
-            },
-          },
-          data: {
-            quantity: {
-              decrement: item.quantity,
-            },
-          },
-        })
-
-        if (updateResult.count === 0) {
-          const product = productMap.get(item.id)
-          throw new Error(`${product?.name || 'This item'} just sold out.`)
-        }
-      }
-
-      return tx.order.create({
-        data: {
-          stripeSessionId: checkoutSessionId || null,
-          total: chargedTotal,
-          status: 'new',
-          ...orderDetails,
-          items: {
-            create: normalizedItems.map((item) => {
-              const product = productMap.get(item.id)
-
-              return {
-                productId: product.id,
-                name: product.name,
-                price: Number(product.price),
-                quantity: Number(item.quantity),
-                imageUrl: product.imageUrl || null,
-                category: product.category || null,
-              }
-            }),
-          },
-        },
-        include: {
-          items: true,
-        },
-      })
+    order = await createOrderRecord({
+      normalizedItems,
+      chargedTotal,
+      checkoutSessionId: null,
+      orderDetails,
     })
 
     await Promise.allSettled([

@@ -47,6 +47,7 @@ In Render, add these environment variables:
 CLIENT_URL=https://sunboundboheme.com
 FRONTEND_URLS=https://www.sunboundboheme.com,https://sunboundboheme.vercel.app
 STRIPE_SECRET_KEY=...
+STRIPE_WEBHOOK_SECRET=...
 ADMIN_PASSWORD_HASH=...
 ADMIN_SESSION_SECRET=...
 SMTP_HOST=smtppro.zoho.com
@@ -135,11 +136,35 @@ VITE_API_URL=https://api.sunboundboheme.com
 
 Redeploy both after changing those values.
 
-## 7. Final production checklist
+## 7. Connect the Stripe webhook
+
+In Stripe:
+
+1. Open Developers -> Webhooks
+2. Add an endpoint
+3. Use:
+
+```text
+https://api.sunboundboheme.com/webhook/stripe
+```
+
+4. Listen for:
+   - `checkout.session.completed`
+   - `checkout.session.async_payment_succeeded`
+5. Copy the signing secret from Stripe
+6. Save it in Render as:
+
+```env
+STRIPE_WEBHOOK_SECRET=...
+```
+
+Redeploy the backend after adding the webhook secret.
+
+## 8. Final production checklist
 
 1. Visit `https://sunboundboheme.com`
 2. Confirm the shop loads products.
-3. Confirm admin login still works at `/alliesthrone`
+3. Confirm admin login still works at `/login` and `/admin`
 4. Place one real test order.
 5. Confirm:
    - order saves in admin

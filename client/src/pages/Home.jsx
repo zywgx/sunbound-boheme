@@ -73,47 +73,59 @@ function Home() {
   return (
     <div>
       <section className="hero">
-        <div className="container hero-content">
-          <p className="eyebrow">Vintage | Boho | Traveler Soul</p>
-          <h1>Curated style for warm days, layered stories, and a little wanderlust.</h1>
-          <p className="hero-text">
-            SUNBOUND BOHEME brings together vintage soul, earthy palettes, and easy statement
-            pieces that feel collected over time.
-          </p>
+        <div className="container hero-layout">
+          <div className="hero-content">
+            <p className="eyebrow">Vintage | Boho | Traveler Soul</p>
+            <h1>Curated style for warm days, layered stories, and a little wanderlust.</h1>
+            <p className="hero-text">
+              SUNBOUND BOHEME brings together vintage soul, earthy palettes, and easy statement
+              pieces that feel collected over time.
+            </p>
 
-          <div className="hero-actions">
-            <Link to="/shop" className="btn">
-              Shop Collection
-            </Link>
+            <div className="hero-actions">
+              <Link to="/shop" className="btn">
+                Shop Collection
+              </Link>
 
-            <Link to="/support" className="btn btn-outline">
-              About & Contact
-            </Link>
+              <Link to="/support" className="btn btn-outline">
+                About & Contact
+              </Link>
+            </div>
+
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <strong>Small-batch</strong>
+                <span>Curated one piece at a time</span>
+              </div>
+
+              <div className="hero-stat">
+                <strong>Transparent</strong>
+                <span>Clear notes on fit and condition</span>
+              </div>
+
+              <div className="hero-stat">
+                <strong>Boho-rooted</strong>
+                <span>Vintage warmth with everyday wearability</span>
+              </div>
+            </div>
           </div>
 
-          <div className="hero-stats">
-            <div className="hero-stat">
-              <strong>Small-batch</strong>
-              <span>Curated one piece at a time</span>
-            </div>
-
-            <div className="hero-stat">
-              <strong>Transparent</strong>
-              <span>Clear notes on fit and condition</span>
-            </div>
-
-            <div className="hero-stat">
-              <strong>Boho-rooted</strong>
-              <span>Vintage warmth with everyday wearability</span>
-            </div>
-          </div>
-
-          <div className="hero-atmosphere" aria-hidden="true">
-            <div className="hero-orbit hero-orbit-one" />
-            <div className="hero-orbit hero-orbit-two" />
-            <div className="hero-manifesto">
-              <span className="hero-manifesto-label">Sunbound Notes</span>
-              <p>Earth tones, collected layers, road-trip denim, and pieces that feel discovered.</p>
+          <div className="hero-editorial">
+            <div className="hero-atmosphere" aria-hidden="true">
+              <div className="hero-orbit hero-orbit-one" />
+              <div className="hero-orbit hero-orbit-two" />
+              <div className="hero-manifesto">
+                <span className="hero-manifesto-label">Sunbound Notes</span>
+                <p>Earth tones, collected layers, road-trip denim, and pieces that feel discovered.</p>
+              </div>
+              <div className="hero-editorial-card">
+                <span className="hero-editorial-label">Current Mood</span>
+                <h2>For the closet that wants softness, shape, and a little desert drama.</h2>
+                <p>
+                  Think dresses with movement, layers with history, and accessories that make an
+                  outfit feel found rather than finished.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -124,8 +136,15 @@ function Home() {
           <div className="section-heading">
             <div>
               <p className="section-label">Collection Focus</p>
-              <h2>Built around texture, ease, and sun-washed color</h2>
+              <h2>Built around texture, ease, and lived-in character</h2>
             </div>
+          </div>
+
+          <div className="collection-intro">
+            <p>
+              The collection is built around pieces that play well together: soft structure, earthy
+              tones, lived-in character, and styling that feels effortless instead of overworked.
+            </p>
           </div>
 
           <div className="feature-grid">
@@ -158,8 +177,24 @@ function Home() {
           {loading ? (
             <p>Loading products...</p>
           ) : (
-            <div className="product-grid">
+            <>
               {products.length > 0 ? (
+                <div className="featured-callout">
+                  <div>
+                    <span className="featured-callout-label">Freshly Curated</span>
+                    <p>
+                      A small rotating selection of pieces chosen for styling ease, strong texture,
+                      and that slightly cinematic SUNBOUND BOHEME mood.
+                    </p>
+                  </div>
+                  <Link to="/shop" className="btn btn-outline">
+                    Browse the Full Edit
+                  </Link>
+                </div>
+              ) : null}
+
+              <div className="product-grid">
+                {products.length > 0 ? (
                 products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))
@@ -168,7 +203,8 @@ function Home() {
                   New arrivals are being prepared now. Check back soon for the next curated drop.
                 </p>
               )}
-            </div>
+              </div>
+            </>
           )}
         </div>
       </section>

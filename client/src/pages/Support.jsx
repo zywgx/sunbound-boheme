@@ -64,8 +64,8 @@ function Support() {
         <div className="policy-card support-contact-box">
           <h2>Contact</h2>
           <p>
-            For now, the best way to reach us is by email. You can replace the
-            sample details below with your live business contact once ready.
+            The best way to reach us is by email. We keep support personal and aim to make order
+            help, returns, and pre-purchase questions easy to handle.
           </p>
           <p><strong>Email:</strong> support@sunboundboheme.com</p>
           <p><strong>Instagram:</strong> @sunboundboheme</p>

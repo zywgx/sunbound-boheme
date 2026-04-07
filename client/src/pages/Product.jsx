@@ -76,7 +76,7 @@ function Product() {
 
           <h1 className="product-title">{product.name}</h1>
 
-          <p className="product-price large">${product.price}</p>
+          <p className="product-price large">${Number(product.price).toFixed(2)}</p>
 
           <p className="product-description">{product.description}</p>
 
