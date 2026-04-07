@@ -60,7 +60,7 @@ function Header() {
           <Link to="/shop">Shop</Link>
           <Link to="/support">Support</Link>
           <Link to="/policies">Policies</Link>
-          {showAdmin && <Link to="/alliesthrone">Admin</Link>}
+          {showAdmin && <Link to="/admin">Admin</Link>}
           <Link to="/cart" className="cart-link">
             Cart
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}

@@ -187,6 +187,116 @@ function buildOrderAdminUpdateData(currentOrder, updates) {
   return data
 }
 
+function getStartOfDay(date) {
+  const start = new Date(date)
+  start.setHours(0, 0, 0, 0)
+  return start
+}
+
+function getStartOfWeek(date) {
+  const start = getStartOfDay(date)
+  const day = start.getDay()
+  const diff = day === 0 ? 6 : day - 1
+  start.setDate(start.getDate() - diff)
+  return start
+}
+
+function getStartOfMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1)
+}
+
+function buildRecentSalesSeries(orders, days = 7) {
+  const today = getStartOfDay(new Date())
+  const points = []
+
+  for (let index = days - 1; index >= 0; index -= 1) {
+    const currentDay = new Date(today)
+    currentDay.setDate(today.getDate() - index)
+    const nextDay = new Date(currentDay)
+    nextDay.setDate(currentDay.getDate() + 1)
+
+    const total = orders.reduce((sum, order) => {
+      const createdAt = new Date(order.createdAt)
+      return createdAt >= currentDay && createdAt < nextDay ? sum + Number(order.total || 0) : sum
+    }, 0)
+
+    points.push({
+      label: currentDay.toLocaleDateString('en-US', { weekday: 'short' }),
+      date: currentDay.toISOString(),
+      total: Number(total.toFixed(2)),
+    })
+  }
+
+  return points
+}
+
+function buildDashboardMetrics(orders) {
+  const now = new Date()
+  const startOfWeek = getStartOfWeek(now)
+  const startOfMonth = getStartOfMonth(now)
+  const totalOrders = orders.length
+  const grossSales = orders.reduce((sum, order) => sum + Number(order.total || 0), 0)
+  const salesThisWeek = orders.reduce((sum, order) => {
+    return new Date(order.createdAt) >= startOfWeek ? sum + Number(order.total || 0) : sum
+  }, 0)
+  const salesThisMonth = orders.reduce((sum, order) => {
+    return new Date(order.createdAt) >= startOfMonth ? sum + Number(order.total || 0) : sum
+  }, 0)
+  const averageOrderValue = totalOrders > 0 ? grossSales / totalOrders : 0
+  const statusCounts = orders.reduce(
+    (counts, order) => {
+      const key = order.status || 'new'
+      counts[key] = (counts[key] || 0) + 1
+      return counts
+    },
+    { new: 0, fulfilled: 0, shipped: 0 }
+  )
+
+  const productRollup = new Map()
+
+  for (const order of orders) {
+    for (const item of order.items || []) {
+      const key = item.productId || item.name
+      const existing = productRollup.get(key) || {
+        productId: item.productId || null,
+        name: item.name,
+        category: item.category || 'Uncategorized',
+        quantitySold: 0,
+        revenue: 0,
+      }
+
+      existing.quantitySold += Number(item.quantity || 0)
+      existing.revenue += Number(item.price || 0) * Number(item.quantity || 0)
+      productRollup.set(key, existing)
+    }
+  }
+
+  const topProducts = [...productRollup.values()]
+    .sort((a, b) => {
+      if (b.quantitySold !== a.quantitySold) {
+        return b.quantitySold - a.quantitySold
+      }
+
+      return b.revenue - a.revenue
+    })
+    .slice(0, 5)
+    .map((product) => ({
+      ...product,
+      revenue: Number(product.revenue.toFixed(2)),
+    }))
+
+  return {
+    grossSales: Number(grossSales.toFixed(2)),
+    totalOrders,
+    averageOrderValue: Number(averageOrderValue.toFixed(2)),
+    salesThisWeek: Number(salesThisWeek.toFixed(2)),
+    salesThisMonth: Number(salesThisMonth.toFixed(2)),
+    statusCounts,
+    recentSales: buildRecentSalesSeries(orders, 7),
+    topProducts,
+  }
+}
+
 app.use(
   cors({
     origin(origin, callback) {
@@ -506,6 +616,24 @@ app.get('/orders', requireAdmin, async (req, res) => {
   } catch (error) {
     console.error('Order fetch error:', error)
     res.status(500).json({ error: 'Failed to load orders.' })
+  }
+})
+
+app.get('/dashboard', requireAdmin, async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        items: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    res.json(buildDashboardMetrics(orders))
+  } catch (error) {
+    console.error('Dashboard metrics error:', error)
+    res.status(500).json({ error: 'Failed to load dashboard metrics.' })
   }
 })
 

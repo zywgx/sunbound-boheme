@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import { buildApiUrl } from '../lib/api'
 
 const API_URL = buildApiUrl('/products')
 const ORDERS_URL = buildApiUrl('/orders')
 const AUTH_URL = buildApiUrl('/auth')
 const STORE_SETTINGS_URL = buildApiUrl('/store-settings')
+const DASHBOARD_URL = buildApiUrl('/dashboard')
 const ORDER_STATUS_OPTIONS = [
   { value: 'new', label: 'New' },
   { value: 'fulfilled', label: 'Fulfilled' },
@@ -29,6 +31,24 @@ const DEFAULT_SHIPPING_SETTINGS = {
   heavyShippingRate: 12.95,
   priorityShippingSurcharge: 6,
 }
+const DEFAULT_DASHBOARD = {
+  grossSales: 0,
+  totalOrders: 0,
+  averageOrderValue: 0,
+  salesThisWeek: 0,
+  salesThisMonth: 0,
+  statusCounts: {
+    new: 0,
+    fulfilled: 0,
+    shipped: 0,
+  },
+  recentSales: [],
+  topProducts: [],
+}
+
+function formatOrderStatus(status) {
+  return ORDER_STATUS_OPTIONS.find((option) => option.value === status)?.label || status || 'New'
+}
 
 const emptyForm = {
   name: '',
@@ -42,15 +62,17 @@ const emptyForm = {
   shippingCustomAmount: '',
 }
 
-function Admin() {
+function Admin({ loginOnly = false }) {
   const [products, setProducts] = useState([])
   const [orders, setOrders] = useState([])
   const [storeSettings, setStoreSettings] = useState(DEFAULT_SHIPPING_SETTINGS)
   const [settingsForm, setSettingsForm] = useState(DEFAULT_SHIPPING_SETTINGS)
+  const [dashboard, setDashboard] = useState(DEFAULT_DASHBOARD)
   const [form, setForm] = useState(emptyForm)
   const [editingId, setEditingId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [ordersLoading, setOrdersLoading] = useState(true)
+  const [dashboardLoading, setDashboardLoading] = useState(true)
   const [settingsSaving, setSettingsSaving] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -62,6 +84,8 @@ function Admin() {
   const [loginLoading, setLoginLoading] = useState(false)
   const [cloudinaryReady, setCloudinaryReady] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const lowStockCount = products.filter((product) => Number(product.quantity) <= 1).length
+  const totalUnits = products.reduce((sum, product) => sum + Number(product.quantity || 0), 0)
 
   useEffect(() => {
     async function checkAuth() {
@@ -91,6 +115,7 @@ function Admin() {
     if (!authenticated) {
       setLoading(false)
       setOrdersLoading(false)
+      setDashboardLoading(false)
       return
     }
 
@@ -125,7 +150,12 @@ function Admin() {
   }, [authenticated])
 
   async function fetchDashboardData() {
-    await Promise.all([fetchProducts(), fetchOrders(), fetchStoreSettings()])
+    await Promise.all([
+      fetchProducts(),
+      fetchOrders(),
+      fetchStoreSettings(),
+      fetchDashboardMetrics(),
+    ])
   }
 
   function getShippingPresets(settings = storeSettings) {
@@ -194,6 +224,38 @@ function Admin() {
       setError(err.message || 'Could not load orders')
     } finally {
       setOrdersLoading(false)
+    }
+  }
+
+  async function fetchDashboardMetrics() {
+    try {
+      setDashboardLoading(true)
+      const res = await fetch(DASHBOARD_URL, {
+        credentials: 'include',
+      })
+
+      if (res.status === 401) {
+        handleUnauthorized()
+        return
+      }
+
+      if (!res.ok) {
+        throw new Error('Failed to load dashboard metrics')
+      }
+
+      const data = await res.json()
+      setDashboard({
+        ...DEFAULT_DASHBOARD,
+        ...data,
+        statusCounts: {
+          ...DEFAULT_DASHBOARD.statusCounts,
+          ...(data.statusCounts || {}),
+        },
+      })
+    } catch (err) {
+      setError(err.message || 'Could not load dashboard metrics')
+    } finally {
+      setDashboardLoading(false)
     }
   }
 
@@ -338,6 +400,7 @@ function Admin() {
       setForm(emptyForm)
       setProducts([])
       setOrders([])
+      setDashboard(DEFAULT_DASHBOARD)
       setError('')
       window.dispatchEvent(new Event('admin-auth-changed'))
     }
@@ -347,6 +410,7 @@ function Admin() {
     setAuthenticated(false)
     setProducts([])
     setOrders([])
+    setDashboard(DEFAULT_DASHBOARD)
     setEditingId(null)
     setForm(emptyForm)
     setError('Your admin session expired. Please sign in again.')
@@ -549,17 +613,35 @@ function Admin() {
     )
   }
 
+  if (!authenticated && !loginOnly) {
+    return <Navigate to="/login" replace />
+  }
+
+  if (authenticated && loginOnly) {
+    return <Navigate to="/admin" replace />
+  }
+
   if (!authenticated) {
     return (
       <section className="section">
         <div className="container admin-login-shell">
           <div className="admin-login-card">
-            <p className="section-label">Private Admin</p>
+            <p className="section-label">Admin Login</p>
             <h1>Sign in to manage products</h1>
             <p className="section-subtext">
-              This area is for your family admin login. Once signed in, you can add products and
-              upload images directly.
+              Sign in with your family admin password to manage products, orders, and uploads.
             </p>
+
+            <div className="admin-login-notes">
+              <div className="admin-login-note">
+                <strong>Products</strong>
+                <span>Add or edit pieces with image upload built in.</span>
+              </div>
+              <div className="admin-login-note">
+                <strong>Orders</strong>
+                <span>Review purchases, tracking, notes, and shipping details.</span>
+              </div>
+            </div>
 
             {!authConfigured && (
               <p className="admin-helper">
@@ -607,13 +689,32 @@ function Admin() {
     <section className="section">
       <div className="container">
         <div className="admin-header">
-          <div>
+          <div className="admin-header-copy">
             <p className="section-label">Private Admin</p>
             <h1>Manage products</h1>
             <p className="section-subtext">
               Add new products, upload images from your computer, and keep the shop updated without
               needing image URLs by hand.
             </p>
+
+            <div className="admin-overview-grid">
+              <div className="admin-overview-card">
+                <span className="admin-overview-label">Live products</span>
+                <strong>{products.length}</strong>
+              </div>
+              <div className="admin-overview-card">
+                <span className="admin-overview-label">Units listed</span>
+                <strong>{totalUnits}</strong>
+              </div>
+              <div className="admin-overview-card">
+                <span className="admin-overview-label">Recent orders</span>
+                <strong>{orders.length}</strong>
+              </div>
+              <div className="admin-overview-card">
+                <span className="admin-overview-label">Low stock</span>
+                <strong>{lowStockCount}</strong>
+              </div>
+            </div>
           </div>
 
           <button type="button" className="btn btn-outline" onClick={handleLogout}>
@@ -623,9 +724,140 @@ function Admin() {
 
         {error && <p className="admin-error">{error}</p>}
 
+        <div className="admin-card admin-dashboard-card">
+          <div className="admin-orders-header">
+            <div>
+              <p className="section-label">Dashboard</p>
+              <h2>Sales and metrics</h2>
+              <p className="admin-card-kicker">
+                A quick snapshot of revenue, order flow, and what is selling best.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={fetchDashboardMetrics}
+              disabled={dashboardLoading}
+            >
+              {dashboardLoading ? 'Refreshing...' : 'Refresh Metrics'}
+            </button>
+          </div>
+
+          {dashboardLoading ? (
+            <p>Loading dashboard...</p>
+          ) : (
+            <>
+              <div className="admin-metrics-grid">
+                <div className="admin-metric-card">
+                  <span className="admin-metric-label">Gross sales</span>
+                  <strong>${Number(dashboard.grossSales).toFixed(2)}</strong>
+                </div>
+                <div className="admin-metric-card">
+                  <span className="admin-metric-label">Orders</span>
+                  <strong>{dashboard.totalOrders}</strong>
+                </div>
+                <div className="admin-metric-card">
+                  <span className="admin-metric-label">Average order</span>
+                  <strong>${Number(dashboard.averageOrderValue).toFixed(2)}</strong>
+                </div>
+                <div className="admin-metric-card">
+                  <span className="admin-metric-label">This week</span>
+                  <strong>${Number(dashboard.salesThisWeek).toFixed(2)}</strong>
+                </div>
+                <div className="admin-metric-card">
+                  <span className="admin-metric-label">This month</span>
+                  <strong>${Number(dashboard.salesThisMonth).toFixed(2)}</strong>
+                </div>
+              </div>
+
+              <div className="admin-dashboard-layout">
+                <div className="admin-dashboard-panel">
+                  <div className="admin-panel-heading">
+                    <h3>Order status</h3>
+                    <p>See what still needs attention.</p>
+                  </div>
+
+                  <div className="admin-status-grid">
+                    <div className="admin-status-card">
+                      <span>New</span>
+                      <strong>{dashboard.statusCounts.new}</strong>
+                    </div>
+                    <div className="admin-status-card">
+                      <span>Fulfilled</span>
+                      <strong>{dashboard.statusCounts.fulfilled}</strong>
+                    </div>
+                    <div className="admin-status-card">
+                      <span>Shipped</span>
+                      <strong>{dashboard.statusCounts.shipped}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="admin-dashboard-panel">
+                  <div className="admin-panel-heading">
+                    <h3>Recent sales</h3>
+                    <p>Last 7 days of revenue.</p>
+                  </div>
+
+                  {dashboard.recentSales.length === 0 ? (
+                    <p>No sales data yet.</p>
+                  ) : (
+                    <div className="admin-sales-strip">
+                      {dashboard.recentSales.map((point) => (
+                        <div key={point.date} className="admin-sales-day">
+                          <span>{point.label}</span>
+                          <strong>${Number(point.total).toFixed(2)}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="admin-dashboard-panel admin-dashboard-panel-wide">
+                  <div className="admin-panel-heading">
+                    <h3>Top products</h3>
+                    <p>Best sellers by quantity sold.</p>
+                  </div>
+
+                  {dashboard.topProducts.length === 0 ? (
+                    <p>No product sales yet.</p>
+                  ) : (
+                    <div className="admin-top-products">
+                      {dashboard.topProducts.map((product) => (
+                        <div
+                          key={`${product.productId || 'name'}-${product.name}`}
+                          className="admin-top-product"
+                        >
+                          <div>
+                            <strong>{product.name}</strong>
+                            <p>{product.category}</p>
+                          </div>
+                          <div className="admin-top-product-metrics">
+                            <span>{product.quantitySold} sold</span>
+                            <strong>${Number(product.revenue).toFixed(2)}</strong>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
         <div className="admin-layout">
           <div className="admin-card">
-            <h2>{editingId ? 'Edit Product' : 'Add Product'}</h2>
+            <div className="admin-card-heading">
+              <div>
+                <p className="section-label">{editingId ? 'Editing' : 'Catalog'}</p>
+                <h2>{editingId ? 'Edit Product' : 'Add Product'}</h2>
+              </div>
+              <p className="admin-card-kicker">
+                Keep listings clean, consistent, and easy for shoppers to scan.
+              </p>
+            </div>
 
             <form className="admin-form" onSubmit={handleSubmit}>
               <input
@@ -774,7 +1006,13 @@ function Admin() {
           </div>
 
           <div className="admin-card">
-            <h2>Current Products</h2>
+            <div className="admin-card-heading">
+              <div>
+                <p className="section-label">Catalog</p>
+                <h2>Current Products</h2>
+              </div>
+              <p className="admin-card-kicker">Quick edit access for everything currently live.</p>
+            </div>
 
             {loading ? (
               <p>Loading products...</p>
@@ -836,49 +1074,80 @@ function Admin() {
             <div>
               <p className="section-label">Shipping Settings</p>
               <h2>Preset rates</h2>
+              <p className="admin-card-kicker">
+                Adjust your standard shipping buckets without touching code.
+              </p>
             </div>
           </div>
 
           <form className="admin-settings-form" onSubmit={handleSaveShippingSettings}>
-            <label className="admin-field-group">
-              <span>Standard shipping preset</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                name="standardShippingRate"
-                value={settingsForm.standardShippingRate}
-                onChange={handleSettingsChange}
-              />
-            </label>
+            <div className="admin-settings-grid">
+              <label className="admin-settings-tile">
+                <span className="admin-settings-eyebrow">Everyday</span>
+                <strong>Standard shipping</strong>
+                <p>Default rate for most pieces and simple orders.</p>
+                <div className="admin-settings-input-wrap">
+                  <span>$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    name="standardShippingRate"
+                    value={settingsForm.standardShippingRate}
+                    onChange={handleSettingsChange}
+                  />
+                </div>
+              </label>
 
-            <label className="admin-field-group">
-              <span>Heavy / oversized preset</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                name="heavyShippingRate"
-                value={settingsForm.heavyShippingRate}
-                onChange={handleSettingsChange}
-              />
-            </label>
+              <label className="admin-settings-tile">
+                <span className="admin-settings-eyebrow">Oversized</span>
+                <strong>Heavy shipping</strong>
+                <p>Use this for bulkier, weightier, or more expensive-to-ship items.</p>
+                <div className="admin-settings-input-wrap">
+                  <span>$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    name="heavyShippingRate"
+                    value={settingsForm.heavyShippingRate}
+                    onChange={handleSettingsChange}
+                  />
+                </div>
+              </label>
 
-            <label className="admin-field-group">
-              <span>Priority shipping add-on</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                name="priorityShippingSurcharge"
-                value={settingsForm.priorityShippingSurcharge}
-                onChange={handleSettingsChange}
-              />
-            </label>
+              <label className="admin-settings-tile">
+                <span className="admin-settings-eyebrow">Upgrade</span>
+                <strong>Priority add-on</strong>
+                <p>Extra amount added on top of standard shipping for faster delivery.</p>
+                <div className="admin-settings-input-wrap">
+                  <span>$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    name="priorityShippingSurcharge"
+                    value={settingsForm.priorityShippingSurcharge}
+                    onChange={handleSettingsChange}
+                  />
+                </div>
+              </label>
+            </div>
 
-            <button className="btn" type="submit" disabled={settingsSaving}>
-              {settingsSaving ? 'Saving Rates...' : 'Save Shipping Rates'}
-            </button>
+            <div className="admin-settings-footer">
+              <div className="admin-settings-summary">
+                <span className="admin-settings-summary-label">Current checkout options</span>
+                <p>
+                  Standard <strong>${Number(settingsForm.standardShippingRate).toFixed(2)}</strong>
+                  {' '}| Heavy <strong>${Number(settingsForm.heavyShippingRate).toFixed(2)}</strong>
+                  {' '}| Priority adds <strong>${Number(settingsForm.priorityShippingSurcharge).toFixed(2)}</strong>
+                </p>
+              </div>
+
+              <button className="btn" type="submit" disabled={settingsSaving}>
+                {settingsSaving ? 'Saving Rates...' : 'Save Shipping Rates'}
+              </button>
+            </div>
           </form>
         </div>
 
@@ -887,6 +1156,9 @@ function Admin() {
             <div>
               <p className="section-label">Orders</p>
               <h2>Recent purchases</h2>
+              <p className="admin-card-kicker">
+                Track fulfillment, shipping details, and customer follow-up in one place.
+              </p>
             </div>
 
             <button
@@ -908,21 +1180,56 @@ function Admin() {
               {orders.map((order) => (
                 <article key={order.id} className="admin-order-item">
                   <div className="admin-order-summary">
-                    <div>
+                    <div className="admin-order-summary-main">
                       <h3>Order #{order.id}</h3>
                       <p>{new Date(order.createdAt).toLocaleString()}</p>
-                      <p className="admin-order-status">
-                        Status:{' '}
-                        {ORDER_STATUS_OPTIONS.find((option) => option.value === order.status)?.label ||
-                          order.status ||
-                          'new'}
-                      </p>
+                      <div className="admin-order-badges">
+                        <span className={`admin-status-pill admin-status-pill-${order.status || 'new'}`}>
+                          {formatOrderStatus(order.status)}
+                        </span>
+                        <span className="admin-order-chip">{order.items.length} item{order.items.length === 1 ? '' : 's'}</span>
+                      </div>
                     </div>
 
-                    <strong>${Number(order.total).toFixed(2)}</strong>
+                    <div className="admin-order-total">
+                      <span>Total</span>
+                      <strong>${Number(order.total).toFixed(2)}</strong>
+                    </div>
                   </div>
 
                   <div className="admin-order-meta">
+                    <div className="admin-order-details">
+                      <span className="admin-order-section-label">Customer</span>
+                      <p><strong>{order.customerName || 'Not captured'}</strong></p>
+                      <p>{order.customerEmail || 'Not captured'}</p>
+                      {order.fulfilledAt && (
+                        <p>
+                          <strong>Fulfilled:</strong>{' '}
+                          {new Date(order.fulfilledAt).toLocaleString()}
+                        </p>
+                      )}
+                      {order.shippedAt && (
+                        <p>
+                          <strong>Shipped:</strong>{' '}
+                          {new Date(order.shippedAt).toLocaleString()}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="admin-order-details">
+                      <span className="admin-order-section-label">Shipping address</span>
+                      <p>{order.shippingLine1 || 'Address not captured'}</p>
+                      {order.shippingLine2 && <p>{order.shippingLine2}</p>}
+                      {(order.shippingCity || order.shippingState || order.shippingPostalCode) && (
+                        <p>
+                          {[order.shippingCity, order.shippingState, order.shippingPostalCode]
+                            .filter(Boolean)
+                            .join(', ')}
+                        </p>
+                      )}
+                      {order.shippingCountry && <p>{order.shippingCountry}</p>}
+                    </div>
+
                     <form
                       className="admin-order-form"
                       onSubmit={(e) => {
@@ -935,6 +1242,8 @@ function Admin() {
                         })
                       }}
                     >
+                      <span className="admin-order-section-label">Update order</span>
+
                       <label className="admin-field-group">
                         <span>Order status</span>
                         <select name="status" defaultValue={order.status || 'new'}>
@@ -970,41 +1279,6 @@ function Admin() {
                         Save Order Update
                       </button>
                     </form>
-
-                    <div className="admin-order-details">
-                      <p>
-                        <strong>Customer:</strong> {order.customerName || 'Not captured'}
-                      </p>
-                      <p>
-                        <strong>Email:</strong> {order.customerEmail || 'Not captured'}
-                      </p>
-                      {order.fulfilledAt && (
-                        <p>
-                          <strong>Fulfilled:</strong>{' '}
-                          {new Date(order.fulfilledAt).toLocaleString()}
-                        </p>
-                      )}
-                      {order.shippedAt && (
-                        <p>
-                          <strong>Shipped:</strong>{' '}
-                          {new Date(order.shippedAt).toLocaleString()}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="admin-order-details">
-                      <p><strong>Ship To:</strong></p>
-                      <p>{order.shippingLine1 || 'Address not captured'}</p>
-                      {order.shippingLine2 && <p>{order.shippingLine2}</p>}
-                      {(order.shippingCity || order.shippingState || order.shippingPostalCode) && (
-                        <p>
-                          {[order.shippingCity, order.shippingState, order.shippingPostalCode]
-                            .filter(Boolean)
-                            .join(', ')}
-                        </p>
-                      )}
-                      {order.shippingCountry && <p>{order.shippingCountry}</p>}
-                    </div>
                   </div>
 
                   <div className="admin-order-products">

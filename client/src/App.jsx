@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -24,7 +24,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/support" element={<Support />} />
           <Route path="/policies" element={<Policies />} />
-          <Route path="/alliesthrone" element={<Admin />} />
+          <Route path="/login" element={<Admin loginOnly />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/alliesthrone" element={<Navigate to="/login" replace />} />
           <Route path="/checkout-success" element={<CheckoutSuccess />} />
           <Route path="/checkout-cancel" element={<CheckoutCancel />} />
         </Routes>
