@@ -59,7 +59,7 @@ The project includes:
 
 ## Project Structure
 
-```
+```text
 client/   React storefront and admin UI
 server/   Express API, Prisma models, Stripe, auth, email
 ```
@@ -120,7 +120,32 @@ The admin dashboard supports:
 - order review and fulfillment updates
 - basic sales metrics
 
+Current routes:
+
+- `/login`
+- `/admin`
+
 ## Notes
 
 - Stripe webhook support is included for reliable paid-order capture.
 - The project is designed for a small family-run store and can be expanded later if needed.
+
+## Suggested GitHub About Section
+
+Description:
+
+```text
+Boutique ecommerce site with a polished storefront, private admin dashboard, Stripe checkout, Cloudinary uploads, and order management.
+```
+
+Website:
+
+```text
+https://www.sunboundboheme.com
+```
+
+Topics:
+
+```text
+react vite express prisma stripe ecommerce cloudinary render vercel boutique
+```
