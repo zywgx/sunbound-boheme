@@ -55,6 +55,7 @@ const emptyForm = {
   price: '',
   description: '',
   imageUrl: '',
+  galleryImages: [],
   category: '',
   slug: '',
   quantity: '',
@@ -320,6 +321,28 @@ function Admin({ loginOnly = false }) {
     }))
   }
 
+  function handleRemoveGalleryImage(indexToRemove) {
+    setForm((prev) => ({
+      ...prev,
+      galleryImages: prev.galleryImages.filter((_, index) => index !== indexToRemove),
+    }))
+  }
+
+  function handleSetCoverImage(imageUrl) {
+    setForm((prev) => {
+      const nextGalleryImages = [
+        prev.imageUrl,
+        ...prev.galleryImages,
+      ].filter((url) => url && url !== imageUrl)
+
+      return {
+        ...prev,
+        imageUrl,
+        galleryImages: nextGalleryImages,
+      }
+    })
+  }
+
   function handleSettingsChange(e) {
     const { name, value } = e.target
     setSettingsForm((prev) => ({
@@ -335,6 +358,7 @@ function Admin({ loginOnly = false }) {
       price: product.price ?? '',
       description: product.description || '',
       imageUrl: product.imageUrl || '',
+      galleryImages: Array.isArray(product.galleryImages) ? product.galleryImages : [],
       category: product.category || '',
       slug: product.slug || '',
       quantity: product.quantity ?? '',
@@ -429,7 +453,7 @@ function Admin({ loginOnly = false }) {
       {
         cloudName: CLOUDINARY_CLOUD_NAME,
         uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-        multiple: false,
+        multiple: true,
         sources: ['local', 'camera'],
         folder: 'sunbound-boheme/products',
         clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp'],
@@ -444,9 +468,11 @@ function Admin({ loginOnly = false }) {
         if (result.event === 'success') {
           setForm((prev) => ({
             ...prev,
-            imageUrl: result.info.secure_url,
+            imageUrl: prev.imageUrl || result.info.secure_url,
+            galleryImages: prev.imageUrl
+              ? [...prev.galleryImages, result.info.secure_url]
+              : prev.galleryImages,
           }))
-          setUploadingImage(false)
         }
 
         if (result.event === 'close') {
@@ -482,6 +508,7 @@ function Admin({ loginOnly = false }) {
         price: Number(form.price),
         description: form.description.trim(),
         imageUrl: form.imageUrl.trim(),
+        galleryImages: form.galleryImages,
         category: form.category.trim(),
         slug: form.slug.trim(),
         quantity: Number(form.quantity),
@@ -947,7 +974,7 @@ function Admin({ loginOnly = false }) {
                   <input
                     type="text"
                     name="imageUrl"
-                    placeholder="Image URL appears here after upload"
+                    placeholder="Cover image URL appears here after upload"
                     value={form.imageUrl}
                     onChange={handleChange}
                   />
@@ -961,17 +988,69 @@ function Admin({ loginOnly = false }) {
                     {uploadingImage
                       ? 'Uploading...'
                       : cloudinaryReady
-                      ? 'Upload Image'
+                      ? 'Upload Images'
                       : 'Loading Upload Tool...'}
                   </button>
                 </div>
 
                 {form.imageUrl && (
-                  <img
-                    src={form.imageUrl}
-                    alt="Selected product"
-                    className="admin-upload-preview"
-                  />
+                  <div className="admin-gallery-section">
+                    <div className="admin-gallery-header">
+                      <div>
+                        <strong>Cover image</strong>
+                        <p>This is the main image shoppers see first.</p>
+                      </div>
+                    </div>
+
+                    <div className="admin-cover-preview-wrap">
+                      <img
+                        src={form.imageUrl}
+                        alt="Selected product"
+                        className="admin-upload-preview"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {form.galleryImages.length > 0 && (
+                  <div className="admin-gallery-section">
+                    <div className="admin-gallery-header">
+                      <div>
+                        <strong>Gallery images</strong>
+                        <p>Extra product images for the product page gallery.</p>
+                      </div>
+                    </div>
+
+                    <div className="admin-gallery-grid">
+                      {form.galleryImages.map((imageUrl, index) => (
+                        <div key={`${imageUrl}-${index}`} className="admin-gallery-item">
+                          <img
+                            src={imageUrl}
+                            alt={`Gallery ${index + 1}`}
+                            className="admin-gallery-preview"
+                          />
+
+                          <div className="admin-gallery-actions">
+                            <button
+                              type="button"
+                              className="btn btn-outline"
+                              onClick={() => handleSetCoverImage(imageUrl)}
+                            >
+                              Make Cover
+                            </button>
+
+                            <button
+                              type="button"
+                              className="btn btn-secondary"
+                              onClick={() => handleRemoveGalleryImage(index)}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
 

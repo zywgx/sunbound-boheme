@@ -6,6 +6,38 @@ const router = express.Router()
 
 const prisma = new PrismaClient()
 
+function parseGalleryImages(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => String(item || '').trim())
+      .filter(Boolean)
+  }
+
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value)
+      return Array.isArray(parsed)
+        ? parsed.map((item) => String(item || '').trim()).filter(Boolean)
+        : []
+    } catch {
+      return []
+    }
+  }
+
+  return []
+}
+
+function serializeGalleryImages(value) {
+  return JSON.stringify(parseGalleryImages(value))
+}
+
+function formatProduct(product) {
+  return {
+    ...product,
+    galleryImages: parseGalleryImages(product.galleryImages),
+  }
+}
+
 function slugify(value) {
   return String(value || '')
     .toLowerCase()
@@ -41,7 +73,7 @@ router.get('/', async (req, res) => {
     const products = await prisma.product.findMany({
       orderBy: { createdAt: 'desc' },
     })
-    res.json(products)
+    res.json(products.map(formatProduct))
   } catch (error) {
     console.error('Error fetching products:', error)
     res.status(500).json({ error: 'Failed to fetch products' })
@@ -65,7 +97,7 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Product not found' })
     }
 
-    res.json(product)
+    res.json(formatProduct(product))
   } catch (error) {
     console.error('Error fetching product:', error)
     res.status(500).json({ error: 'Failed to fetch product' })
@@ -79,6 +111,7 @@ router.post('/', requireAdmin, async (req, res) => {
       price,
       description,
       imageUrl,
+      galleryImages,
       category,
       quantity,
       slug,
@@ -94,6 +127,7 @@ router.post('/', requireAdmin, async (req, res) => {
         price: Number(price),
         description,
         imageUrl,
+        galleryImages: serializeGalleryImages(galleryImages),
         category,
         quantity: Number(quantity),
         shippingProfile: shippingProfile || 'standard',
@@ -106,7 +140,7 @@ router.post('/', requireAdmin, async (req, res) => {
       },
     })
 
-    res.status(201).json(newProduct)
+    res.status(201).json(formatProduct(newProduct))
   } catch (error) {
     console.error('Error creating product:', error)
     res.status(500).json({ error: 'Failed to create product' })
@@ -121,6 +155,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
       price,
       description,
       imageUrl,
+      galleryImages,
       category,
       quantity,
       slug,
@@ -144,6 +179,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
         price: Number(price),
         description,
         imageUrl,
+        galleryImages: serializeGalleryImages(galleryImages),
         category,
         quantity: Number(quantity),
         shippingProfile: shippingProfile || 'standard',
@@ -156,7 +192,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
       },
     })
 
-    res.json(updatedProduct)
+    res.json(formatProduct(updatedProduct))
   } catch (error) {
     console.error('Error updating product:', error)
     res.status(500).json({ error: 'Failed to update product' })

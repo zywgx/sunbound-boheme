@@ -10,6 +10,7 @@ function Product() {
   const { addToCart } = useCart()
 
   const [product, setProduct] = useState(null)
+  const [selectedImage, setSelectedImage] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -20,6 +21,7 @@ function Product() {
         setError('')
         const response = await axios.get(buildApiUrl(`/products/${id}`))
         setProduct(response.data)
+        setSelectedImage(response.data.imageUrl || FALLBACK_PRODUCT_IMAGE)
       } catch (err) {
         console.error('Failed to fetch product:', err)
         setError('Product not found.')
@@ -55,13 +57,18 @@ function Product() {
   }
 
   const isOutOfStock = product.quantity <= 0
+  const galleryImages = [
+    product.imageUrl,
+    ...(Array.isArray(product.galleryImages) ? product.galleryImages : []),
+  ].filter((imageUrl, index, images) => imageUrl && images.indexOf(imageUrl) === index)
+  const activeImage = selectedImage || product.imageUrl || FALLBACK_PRODUCT_IMAGE
 
   return (
     <section className="section">
       <div className="container product-page">
         <div className="product-image-wrapper">
           <img
-            src={product.imageUrl}
+            src={activeImage}
             alt={product.name}
             className="product-detail-image"
             onError={(event) => {
@@ -69,6 +76,30 @@ function Product() {
               event.currentTarget.src = FALLBACK_PRODUCT_IMAGE
             }}
           />
+
+          {galleryImages.length > 1 && (
+            <div className="product-gallery-strip">
+              {galleryImages.map((imageUrl, index) => (
+                <button
+                  key={`${imageUrl}-${index}`}
+                  type="button"
+                  className={`product-gallery-thumb${
+                    activeImage === imageUrl ? ' is-active' : ''
+                  }`}
+                  onClick={() => setSelectedImage(imageUrl)}
+                >
+                  <img
+                    src={imageUrl}
+                    alt={`${product.name} view ${index + 1}`}
+                    onError={(event) => {
+                      event.currentTarget.onerror = null
+                      event.currentTarget.src = FALLBACK_PRODUCT_IMAGE
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="product-detail-content">
