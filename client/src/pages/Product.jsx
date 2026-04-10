@@ -104,6 +104,7 @@ function Product() {
 
         <div className="product-detail-content">
           <p className="product-category">{product.category}</p>
+          {product.size && <p className="product-size product-size-detail">Size {product.size}</p>}
 
           <h1 className="product-title">{product.name}</h1>
 
@@ -120,6 +121,7 @@ function Product() {
           </button>
 
           <div className="product-info-box">
+            <p><strong>Size:</strong> {product.size || 'Not listed'}</p>
             <p><strong>Shipping:</strong> Calculated at checkout</p>
             <p><strong>Returns:</strong> Case-by-case review</p>
             <p><strong>Available:</strong> {product.quantity}</p>

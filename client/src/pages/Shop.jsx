@@ -8,6 +8,7 @@ function Shop() {
   const [products, setProducts] = useState([])
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('All')
+  const [size, setSize] = useState('All')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -34,10 +35,13 @@ function Shop() {
     const matchesCategory =
       category === 'All' || product.category === category
 
-    return matchesSearch && matchesCategory
+    const matchesSize = size === 'All' || product.size === size
+
+    return matchesSearch && matchesCategory && matchesSize
   })
 
   const categories = ['All', ...new Set(products.map((product) => product.category).filter(Boolean))]
+  const sizes = ['All', ...new Set(products.map((product) => product.size).filter(Boolean))]
 
   return (
     <section className="section">
@@ -75,6 +79,19 @@ function Shop() {
               {cat}
             </button>
           ))}
+        </div>
+
+        <div className="shop-filter-toolbar">
+          <label className="shop-filter-select">
+            <span>Filter by size</span>
+            <select value={size} onChange={(e) => setSize(e.target.value)}>
+              {sizes.map((sizeOption) => (
+                <option key={sizeOption} value={sizeOption}>
+                  {sizeOption}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         {loading ? (

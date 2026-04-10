@@ -113,6 +113,7 @@ router.post('/', requireAdmin, async (req, res) => {
       imageUrl,
       galleryImages,
       category,
+      size,
       quantity,
       slug,
       shippingProfile,
@@ -129,6 +130,7 @@ router.post('/', requireAdmin, async (req, res) => {
         imageUrl,
         galleryImages: serializeGalleryImages(galleryImages),
         category,
+        size: size ? String(size).trim() : null,
         quantity: Number(quantity),
         shippingProfile: shippingProfile || 'standard',
         shippingCustomAmount:
@@ -157,6 +159,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
       imageUrl,
       galleryImages,
       category,
+      size,
       quantity,
       slug,
       shippingProfile,
@@ -181,6 +184,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
         imageUrl,
         galleryImages: serializeGalleryImages(galleryImages),
         category,
+        size: size ? String(size).trim() : null,
         quantity: Number(quantity),
         shippingProfile: shippingProfile || 'standard',
         shippingCustomAmount:

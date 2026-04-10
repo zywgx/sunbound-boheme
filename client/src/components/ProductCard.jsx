@@ -23,6 +23,7 @@ function ProductCard({ product, compact = false }) {
         <div className="product-card-content">
           <h3>{product.name}</h3>
           <p className="product-category">{product.category}</p>
+          {product.size && <p className="product-size">Size {product.size}</p>}
           <p className="product-price">${product.price}</p>
           {isOutOfStock && <p className="product-stock-note">Sold Out</p>}
         </div>

@@ -24,6 +24,24 @@ const CATEGORY_OPTIONS = [
   'Home',
   'Custom',
 ]
+const SIZE_OPTIONS = [
+  'One Size',
+  'XS',
+  'S',
+  'M',
+  'L',
+  'XL',
+  'XXL',
+  '0',
+  '2',
+  '4',
+  '6',
+  '8',
+  '10',
+  '12',
+  '14',
+  '16',
+]
 const CLOUDINARY_CLOUD_NAME = 'dbil6mtce'
 const CLOUDINARY_UPLOAD_PRESET = 'sunbound_products'
 const DEFAULT_SHIPPING_SETTINGS = {
@@ -57,6 +75,8 @@ const emptyForm = {
   imageUrl: '',
   galleryImages: [],
   category: '',
+  size: '',
+  customSize: '',
   slug: '',
   quantity: '',
   shippingProfile: 'standard',
@@ -180,6 +200,27 @@ function Admin({ loginOnly = false }) {
     return currentCategory && !CATEGORY_OPTIONS.includes(currentCategory)
       ? [currentCategory, ...CATEGORY_OPTIONS]
       : CATEGORY_OPTIONS
+  }
+
+  function resolveSizeFormFields(sizeValue = '') {
+    if (!sizeValue) {
+      return {
+        size: '',
+        customSize: '',
+      }
+    }
+
+    if (SIZE_OPTIONS.includes(sizeValue)) {
+      return {
+        size: sizeValue,
+        customSize: '',
+      }
+    }
+
+    return {
+      size: 'custom',
+      customSize: sizeValue,
+    }
   }
 
   async function fetchProducts() {
@@ -360,6 +401,7 @@ function Admin({ loginOnly = false }) {
       imageUrl: product.imageUrl || '',
       galleryImages: Array.isArray(product.galleryImages) ? product.galleryImages : [],
       category: product.category || '',
+      ...resolveSizeFormFields(product.size || ''),
       slug: product.slug || '',
       quantity: product.quantity ?? '',
       shippingProfile: product.shippingProfile || 'standard',
@@ -510,6 +552,7 @@ function Admin({ loginOnly = false }) {
         imageUrl: form.imageUrl.trim(),
         galleryImages: form.galleryImages,
         category: form.category.trim(),
+        size: (form.size === 'custom' ? form.customSize : form.size).trim() || null,
         slug: form.slug.trim(),
         quantity: Number(form.quantity),
         shippingProfile: form.shippingProfile,
@@ -922,6 +965,36 @@ function Admin({ loginOnly = false }) {
               </label>
 
               <label className="admin-field-group">
+                <span>Size</span>
+                <select
+                  name="size"
+                  value={form.size}
+                  onChange={handleChange}
+                >
+                  <option value="">No size / not listed</option>
+                  {SIZE_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                  <option value="custom">Custom size label</option>
+                </select>
+              </label>
+
+              {form.size === 'custom' && (
+                <label className="admin-field-group">
+                  <span>Custom size label</span>
+                  <input
+                    type="text"
+                    name="customSize"
+                    placeholder="Example: 27 waist or Petite Small"
+                    value={form.customSize}
+                    onChange={handleChange}
+                  />
+                </label>
+              )}
+
+              <label className="admin-field-group">
                 <span>Product slug (optional)</span>
                 <input
                   type="text"
@@ -1110,6 +1183,7 @@ function Admin({ loginOnly = false }) {
                     <div className="admin-product-info">
                       <h3>{product.name}</h3>
                       <p>{product.category}</p>
+                      {product.size && <p>Size: {product.size}</p>}
                       {product.slug && <p>Slug: {product.slug}</p>}
                       <p>${Number(product.price).toFixed(2)}</p>
                       <p>Qty: {product.quantity}</p>
