@@ -7,46 +7,51 @@ const API_URL = buildApiUrl('/products')
 
 const collectionHighlights = [
   {
-    title: 'Dresses with movement',
+    title: 'Iconic Dresses',
     description:
-      'Soft silhouettes, earthy prints, and pieces that feel easy from market mornings to dinners out.',
+      'Statement silhouettes and dreamy shapes made to stand out at your next event.',
   },
   {
-    title: 'Layers with character',
+    title: 'Road-trip Denims',
     description:
-      'Vintage-washed denim, textured knits, and outerwear that adds story instead of bulk.',
+      'Worn-in denim and easy layers with that festival-road-trip energy already built in.',
   },
   {
-    title: 'Accessories that finish the look',
+    title: 'Statement Skirts',
     description:
-      'Woven bags, sun-faded leather, and small details that make an outfit feel collected.',
+      'Pieces with movement, shape, and personality that make the rest of the outfit easy.',
+  },
+  {
+    title: 'Effortless Styles',
+    description:
+      'Curated second-hand looks that feel wild, free, and easy to wear without looking ordinary.',
   },
 ]
 
 const studioNotes = [
-  'Every item is selected for texture, shape, and how easily it works with pieces you already own.',
-  'Condition notes stay honest and practical, so the collection feels personal without feeling risky.',
-  'Small-batch sourcing keeps the shop fresh and helps each drop feel discovered rather than mass-made.',
+  'Curated second-hand styles fit for the dreamers, with pieces chosen to bring personality to your closet.',
+  'Inspired by vintage silhouettes and earth toned palettes, the collection is built to feel both expressive and wearable.',
+  'Every find is selected to help you look like a dime while saving a dime.',
 ]
 
 const shoppingSteps = [
   {
     step: '01',
-    title: 'Browse the latest finds',
+    title: 'Pick your favorites',
     description:
-      'New arrivals are chosen to mix together naturally, so building a full look feels easy.',
+      'Browse the latest drop of second-hand pieces and find the looks that fit your next event or everyday mood.',
   },
   {
     step: '02',
-    title: 'Check the details',
+    title: 'Check the notes',
     description:
-      'Sizing, condition, and styling notes are there to help you buy with confidence.',
+      'Sizing, condition, and styling details are there to keep the shopping experience easy and transparent.',
   },
   {
     step: '03',
-    title: 'Wear it your way',
+    title: 'Dress the dreamers',
     description:
-      'Style pieces for travel, everyday layering, and that relaxed golden-hour feeling.',
+      'Style your pieces your way, whether you are headed to a festival, a trip, or your next standout night out.',
   },
 ]
 
@@ -75,11 +80,11 @@ function Home() {
       <section className="hero">
         <div className="container hero-layout">
           <div className="hero-content">
-            <p className="eyebrow">Vintage | Boho | Traveler Soul</p>
-            <h1>Curated style for warm days, layered stories, and a little wanderlust.</h1>
+            <p className="eyebrow">Festival | Bohemian | Wanderlust | Wild &amp; Free</p>
+            <h1>Curated second-hand styles fit for the dreamers.</h1>
             <p className="hero-text">
-              SUNBOUND BOHEME brings together vintage soul, earthy palettes, and easy statement
-              pieces that feel collected over time.
+              SUNBOUND BOHEME is inspired by vintage silhouettes and earth toned palettes,
+              offering unique pieces that will pop at your next event.
             </p>
 
             <div className="hero-actions">
@@ -95,17 +100,17 @@ function Home() {
             <div className="hero-stats">
               <div className="hero-stat">
                 <strong>Small-batch</strong>
-                <span>Curated one piece at a time</span>
+                <span>Curated second-hand styles for the dreamers</span>
               </div>
 
               <div className="hero-stat">
-                <strong>Transparent</strong>
-                <span>Clear notes on fit and condition</span>
+                <strong>Wanderlust</strong>
+                <span>Vintage-inspired pieces with festival energy</span>
               </div>
 
               <div className="hero-stat">
-                <strong>Boho-rooted</strong>
-                <span>Vintage warmth with everyday wearability</span>
+                <strong>Wild &amp; Free</strong>
+                <span>Styles that pop while still feeling effortless</span>
               </div>
             </div>
           </div>
@@ -116,14 +121,17 @@ function Home() {
               <div className="hero-orbit hero-orbit-two" />
               <div className="hero-manifesto">
                 <span className="hero-manifesto-label">Sunbound Notes</span>
-                <p>Earth tones, collected layers, road-trip denim, and pieces that feel discovered.</p>
+                <p>
+                  Earth tones, boho style, repurposed, traveller soul, discounted pieces from your
+                  favorite brands.
+                </p>
               </div>
               <div className="hero-editorial-card">
                 <span className="hero-editorial-label">Current Mood</span>
-                <h2>For the closet that wants softness, shape, and a little desert drama.</h2>
+                <h2>For the shoppers who want to look like a dime, while saving a dime.</h2>
                 <p>
-                  Think dresses with movement, layers with history, and accessories that make an
-                  outfit feel found rather than finished.
+                  Unique second-hand pieces with vintage soul, bohemian energy, and enough pop to
+                  make the next outfit feel like an event.
                 </p>
               </div>
             </div>
@@ -136,14 +144,16 @@ function Home() {
           <div className="section-heading">
             <div>
               <p className="section-label">Collection Focus</p>
-              <h2>Built around texture, ease, and lived-in character</h2>
+              <h2>Repurposed style that feels expressive, wearable, and worth discovering</h2>
             </div>
           </div>
 
           <div className="collection-intro">
             <p>
-              The collection is built around pieces that play well together: soft structure, earthy
-              tones, lived-in character, and styling that feels effortless instead of overworked.
+              The collection is built around repurposing curated, second-hand pieces from brands
+              you love. Resale fashion is sustainable for both our environment and our wallets.
+              If this interests you, join SUNBOUND BOHEME in dressing the dreamers by picking out
+              your favorite pieces in our collection.
             </p>
           </div>
 
@@ -165,7 +175,8 @@ function Home() {
               <p className="section-label">Featured</p>
               <h2>Featured Products</h2>
               <p className="section-subtext">
-                A rotating edit of pieces chosen for texture, movement, and everyday styling.
+                A rotating edit of hand picked pieces, perfect for anyone looking to try new styles
+                or elevate looks you already have.
               </p>
             </div>
 
@@ -180,11 +191,11 @@ function Home() {
             <>
               {products.length > 0 ? (
                 <div className="featured-callout">
-                  <div>
-                    <span className="featured-callout-label">Freshly Curated</span>
-                    <p>
-                      A small rotating selection of pieces chosen for styling ease, strong texture,
-                      and that slightly cinematic SUNBOUND BOHEME mood.
+                <div>
+                  <span className="featured-callout-label">Freshly Curated</span>
+                  <p>
+                      A rotating mix of second-hand finds with boho spirit, vintage shape, and the
+                      kind of personality that makes getting dressed more fun.
                     </p>
                   </div>
                   <Link to="/shop" className="btn btn-outline">
@@ -213,10 +224,10 @@ function Home() {
         <div className="container story-grid">
           <div className="story-panel story-copy">
             <p className="section-label">The Mood</p>
-            <h2>A wardrobe that feels collected, not crowded</h2>
+            <h2>For dreamers, event-goers, and anyone chasing a little more personality</h2>
             <p className="story-lead">
-              The goal is simple: pieces with soul, softness, and enough character to make everyday
-              outfits feel a little cinematic.
+              The goal is simple: bring together second-hand pieces that feel bold, wearable,
+              and a little bit wanderlust.
             </p>
 
             <div className="story-notes">
@@ -228,14 +239,14 @@ function Home() {
 
           <div className="story-panel story-accent">
             <p className="story-kicker">
-              For the closet that wants to feel sunlit, grounded, and lived in.
+              For the shoppers who want standout style without paying standout prices.
             </p>
 
             <div className="story-quote">
               <span className="quote-mark">"</span>
               <p>
-                Think road-trip denim, market bags, soft dresses, and the kind of layers that only
-                get better with wear.
+                Think iconic dresses, road-trip denims, statement skirts, and effortless styles
+                built to dress the dreamers.
               </p>
             </div>
           </div>
@@ -247,7 +258,7 @@ function Home() {
           <div className="section-heading">
             <div>
               <p className="section-label">How It Works</p>
-              <h2>Easy to browse, easy to trust</h2>
+              <h2>Easy to browse, easy to fall for</h2>
             </div>
           </div>
 
@@ -267,17 +278,17 @@ function Home() {
         <div className="container trust-grid">
           <div className="trust-item">
             <h3>Curated Pieces</h3>
-            <p>Selected with a focus on style, warmth, and character.</p>
+            <p>Selected for personality, movement, and standout style.</p>
           </div>
 
           <div className="trust-item">
             <h3>Clear Condition Notes</h3>
-            <p>We aim to present items honestly and thoughtfully.</p>
+            <p>Every piece is presented honestly so shopping second-hand still feels easy.</p>
           </div>
 
           <div className="trust-item">
-            <h3>Fair Support</h3>
-            <p>Every issue is reviewed carefully and case by case.</p>
+            <h3>Dreamer Energy</h3>
+            <p>Vintage silhouettes, earth tones, and event-ready pieces with a free spirit.</p>
           </div>
         </div>
       </section>
@@ -286,10 +297,10 @@ function Home() {
         <div className="container closing-card">
           <div>
             <p className="section-label">Start Here</p>
-            <h2>Browse the collection and find the pieces that feel like you.</h2>
+            <h2>Browse the collection and find the pieces that make your next look pop.</h2>
             <p className="section-subtext closing-copy">
-              Whether you are building a full boho wardrobe or just looking for one perfect accent,
-              the shop is designed to feel approachable, warm, and easy to explore.
+              Whether you are styling for an event, a trip, or just want a wardrobe with more
+              personality, the collection is built to help you dress the dreamers.
             </p>
           </div>
 
