@@ -422,7 +422,7 @@ img {
 .section-label {
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--orange);
+  color: var(--forest);
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
 }
@@ -438,10 +438,10 @@ img {
 }
 
 .trust-item {
-  background: rgba(255, 250, 244, 0.7);
+  background: rgba(163, 177, 138, 0.14);
   border-radius: var(--radius);
   padding: 1.25rem;
-  border: 1px solid rgba(62, 44, 35, 0.08);
+  border: 1px solid rgba(111, 127, 93, 0.22);
 }
 
 .trust-item h3 {
@@ -1865,6 +1865,7 @@ img {
 .collection-card {
   background: rgba(255, 250, 244, 0.92);
   border: 1px solid rgba(62, 44, 35, 0.08);
+  border-top: 3px solid var(--sage);
 }
 
 .collection-card h3 {
@@ -1966,7 +1967,7 @@ img {
 .process-step {
   display: inline-flex;
   margin-bottom: 0.9rem;
-  color: var(--clay);
+  color: var(--forest);
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -1977,6 +1978,17 @@ img {
 
 .closing-section {
   padding-top: 1rem;
+}
+
+.roadtrip-section {
+  margin-top: 2.5rem;
+  line-height: 0;
+}
+
+.roadtrip-scene {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .featured-callout {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
 import SunGraphic from '../components/SunGraphic'
+import RoadtripScene from '../components/RoadtripScene'
 import { buildApiUrl } from '../lib/api'
 
 const API_URL = buildApiUrl('/products')
@@ -316,6 +317,10 @@ function Home() {
             </Link>
           </div>
         </div>
+      </section>
+
+      <section className="roadtrip-section" aria-hidden="true">
+        <RoadtripScene />
       </section>
     </div>
   )
