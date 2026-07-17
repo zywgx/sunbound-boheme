@@ -1,7 +1,10 @@
+import SunGraphic from '../components/SunGraphic'
+
 function Support() {
   return (
     <section className="section">
       <div className="container policy-page">
+        <SunGraphic className="page-sun" />
         <h1>About & Contact</h1>
         <p className="section-subtext">
           SUNBOUND BOHEME is a family-run shop built around curated pieces,

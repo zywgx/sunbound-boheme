@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { buildApiUrl } from '../lib/api'
+import SunGraphic from './SunGraphic'
 
 const AUTH_STATUS_URL = buildApiUrl('/auth/status')
 
@@ -52,6 +53,7 @@ function Header() {
     <header className="site-header">
       <div className="container nav-wrapper">
         <Link to="/" className="brand">
+          <SunGraphic className="brand-sun" variant="burst" />
           SUNBOUND BOHEME
         </Link>
 

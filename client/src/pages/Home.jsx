@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../components/ProductCard'
+import SunGraphic from '../components/SunGraphic'
 import { buildApiUrl } from '../lib/api'
 
 const API_URL = buildApiUrl('/products')
@@ -119,6 +120,8 @@ function Home() {
             <div className="hero-atmosphere" aria-hidden="true">
               <div className="hero-orbit hero-orbit-one" />
               <div className="hero-orbit hero-orbit-two" />
+              <SunGraphic className="hero-sun hero-sun-one" rays={16} />
+              <SunGraphic className="hero-sun hero-sun-two" rays={12} />
               <div className="hero-manifesto">
                 <span className="hero-manifesto-label">Sunbound Notes</span>
                 <p>

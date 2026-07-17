@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../components/ProductCard'
+import SunGraphic from '../components/SunGraphic'
 import { buildApiUrl } from '../lib/api'
 
 const API_URL = buildApiUrl('/products')
@@ -48,6 +49,7 @@ function Shop() {
       <div className="container">
         <div className="section-heading">
           <div>
+            <SunGraphic className="page-sun" />
             <p className="section-label">Collection</p>
             <h1>Shop</h1>
             <p className="section-subtext">

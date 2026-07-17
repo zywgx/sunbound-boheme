@@ -1,7 +1,10 @@
+import SunGraphic from '../components/SunGraphic'
+
 function Policies() {
   return (
     <section className="section">
       <div className="container policy-page">
+        <SunGraphic className="page-sun" />
         <h1>Policies</h1>
         <p className="section-subtext">
           These policies are written to be clear, fair, and realistic for a
