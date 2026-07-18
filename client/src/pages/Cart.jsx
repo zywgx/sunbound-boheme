@@ -1,6 +1,7 @@
 ﻿import { Link } from 'react-router-dom'
 import { useCart } from '../context/useCart'
 import { useEffect, useState } from 'react'
+import SunGraphic from '../components/SunGraphic'
 
 const DEFAULT_SHIPPING_SETTINGS = {
   free: 0,
@@ -105,6 +106,7 @@ function Cart() {
       <div className="container">
         <div className="cart-header">
           <div>
+            <SunGraphic className="page-sun" />
             <h1>Your Cart</h1>
             <p className="section-subtext">
               Review your items before checkout.

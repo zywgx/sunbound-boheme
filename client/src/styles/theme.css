@@ -74,6 +74,9 @@ img {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-size: 1.3rem;
   font-weight: bold;
   letter-spacing: 0.08em;
@@ -419,7 +422,7 @@ img {
 .section-label {
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--orange);
+  color: var(--forest);
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
 }
@@ -435,10 +438,10 @@ img {
 }
 
 .trust-item {
-  background: rgba(255, 250, 244, 0.7);
+  background: rgba(163, 177, 138, 0.14);
   border-radius: var(--radius);
   padding: 1.25rem;
-  border: 1px solid rgba(62, 44, 35, 0.08);
+  border: 1px solid rgba(111, 127, 93, 0.22);
 }
 
 .trust-item h3 {
@@ -1862,6 +1865,7 @@ img {
 .collection-card {
   background: rgba(255, 250, 244, 0.92);
   border: 1px solid rgba(62, 44, 35, 0.08);
+  border-top: 3px solid var(--sage);
 }
 
 .collection-card h3 {
@@ -1963,7 +1967,7 @@ img {
 .process-step {
   display: inline-flex;
   margin-bottom: 0.9rem;
-  color: var(--clay);
+  color: var(--forest);
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -1974,6 +1978,17 @@ img {
 
 .closing-section {
   padding-top: 1rem;
+}
+
+.roadtrip-section {
+  margin-top: 2.5rem;
+  line-height: 0;
+}
+
+.roadtrip-scene {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .featured-callout {
@@ -2114,5 +2129,72 @@ img {
 
   .admin-header {
     align-items: flex-start;
+  }
+}
+
+/* Sun motif */
+.sun-graphic {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  color: var(--orange);
+  flex-shrink: 0;
+}
+
+.brand-sun {
+  width: 1.35em;
+  height: 1.35em;
+  color: var(--clay);
+}
+
+.footer-sun {
+  display: block;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin: 0 auto 0.6rem;
+  color: var(--orange);
+  opacity: 0.9;
+}
+
+.page-sun {
+  display: block;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-bottom: 0.6rem;
+  color: var(--orange);
+}
+
+.hero-sun {
+  position: absolute;
+  color: rgba(240, 196, 138, 0.85);
+  pointer-events: none;
+}
+
+.hero-sun-one {
+  top: 1.6rem;
+  left: 1.6rem;
+  width: 3.6rem;
+  height: 3.6rem;
+  animation: sun-spin 40s linear infinite;
+}
+
+.hero-sun-two {
+  right: 2rem;
+  top: 42%;
+  width: 2.4rem;
+  height: 2.4rem;
+  color: rgba(217, 119, 66, 0.7);
+  animation: sun-spin 55s linear infinite reverse;
+}
+
+@keyframes sun-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sun {
+    animation: none;
   }
 }
