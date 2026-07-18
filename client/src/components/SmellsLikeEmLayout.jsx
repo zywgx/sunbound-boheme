@@ -17,6 +17,7 @@ function SmellsLikeEmLayout({ children }) {
             <Link to="/fragrances#shelf">Categories</Link>
             <Link to="/fragrances#reviews">Reviews</Link>
             <Link to="/fragrances#about">About</Link>
+            <Link to="/" className="sle-home-link">Sunbound Boheme ↗</Link>
             <Link to="/fragrances/cart" className="sle-cart-link">
               Cart{cartCount > 0 ? ` (${cartCount})` : ''}
             </Link>
@@ -29,7 +30,11 @@ function SmellsLikeEmLayout({ children }) {
       <footer className="sle-footer">
         <div className="sle-container">
           <p>Smells Like Em — honest fragrance reviews &amp; decants.</p>
-          <p className="sle-muted">Part of the Sunbound family. Scents sold as decants only.</p>
+          <p className="sle-muted">
+            Part of the{' '}
+            <Link to="/" className="sle-footer-link">Sunbound Boheme</Link>{' '}
+            family. Scents sold as decants only.
+          </p>
         </div>
       </footer>
     </div>

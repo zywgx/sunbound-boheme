@@ -2766,3 +2766,32 @@ img {
   text-decoration: underline;
   padding: 0;
 }
+
+/* Smells Like Em — back-to-Sunbound links */
+.sle-home-link {
+  font-size: 0.9rem;
+  opacity: 0.7 !important;
+  border-left: 1px solid var(--sle-line);
+  padding-left: 1.2rem;
+}
+.sle-home-link:hover { opacity: 1 !important; }
+.sle-footer-link {
+  color: var(--sle-cream);
+  text-decoration: underline;
+}
+
+/* Smells Like Em — make the branded cart distinctly green */
+.sle-theme .cart-header h1,
+.sle-theme .cart-summary h2,
+.sle-theme .cart-empty h2 { color: var(--sle-olive-deep); }
+.sle-theme .cart-summary {
+  border-top: 4px solid var(--sle-olive);
+  background: var(--sle-cream-soft);
+}
+.sle-theme .cart-item-card {
+  border-left: 3px solid var(--sle-olive);
+  background: var(--sle-cream-soft);
+}
+.sle-theme .total-row span { color: var(--sle-olive-deep); }
+.sle-theme .quantity-control button { color: var(--sle-olive-deep); }
+.sle-theme .cart-item-total { color: var(--sle-olive-deep); }
