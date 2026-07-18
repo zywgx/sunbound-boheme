@@ -2641,6 +2641,92 @@ img {
   color: var(--sle-olive-deep);
 }
 
+.sle-scent-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.sle-scent-tags span {
+  border: 1px solid rgba(124, 138, 76, 0.24);
+  border-radius: 999px;
+  background: rgba(124, 138, 76, 0.1);
+  color: var(--sle-olive-deep);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.38rem 0.55rem;
+}
+
+/* Contact / inquiries */
+.sle-contact {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(244, 234, 214, 0.42), transparent 34%),
+    linear-gradient(135deg, var(--sle-olive-deep), #536235);
+  color: var(--sle-cream);
+  padding: 4rem 0;
+}
+
+.sle-contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.75fr);
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.sle-contact h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+  margin-bottom: 1rem;
+}
+
+.sle-contact p {
+  max-width: 58ch;
+  line-height: 1.65;
+  opacity: 0.92;
+}
+
+.sle-location-note {
+  margin-top: 1rem;
+  font-weight: 800;
+  color: #fff6dc;
+}
+
+.sle-contact-card {
+  border: 1px solid rgba(244, 234, 214, 0.24);
+  border-radius: 20px;
+  background: rgba(244, 234, 214, 0.12);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.14);
+  padding: 1.35rem;
+}
+
+.sle-contact-card span,
+.product-email-card span {
+  display: block;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.sle-email-link,
+.product-email-card a {
+  display: inline-block;
+  color: #fff6dc;
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-decoration: none;
+  margin-bottom: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.sle-email-link:hover,
+.product-email-card a:hover {
+  text-decoration: underline;
+}
+
 /* Honesty / about */
 .sle-honesty {
   background: var(--sle-olive-deep);
@@ -2720,6 +2806,7 @@ img {
 }
 
 @media (max-width: 720px) {
+  .sle-contact-grid,
   .sle-honesty-grid {
     grid-template-columns: 1fr;
   }
@@ -2903,6 +2990,25 @@ img {
   color: var(--clay);
   font-size: 0.95rem;
   line-height: 1.5;
+}
+
+.product-email-card {
+  margin: 0.9rem 0 1.1rem;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(124, 138, 76, 0.24);
+  background: rgba(124, 138, 76, 0.12);
+}
+
+.product-email-card a {
+  color: var(--sle-olive-deep);
+  font-size: 1rem;
+}
+
+.product-email-card p {
+  margin: 0;
+  color: rgba(42, 49, 25, 0.76);
+  line-height: 1.55;
 }
 
 .sle-theme .product-pause-note {

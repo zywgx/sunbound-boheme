@@ -5,6 +5,8 @@ import { FRAGRANCE_FALLBACK_IMAGE, getProductPath, isFragranceProduct } from '..
 import { buildApiUrl } from '../lib/api'
 
 const API_URL = buildApiUrl('/products')
+const CONTACT_EMAIL = 'smellslikeem@gmail.com'
+const CONTACT_SUBJECT = 'Smells Like Em scent inquiry'
 
 // "The shelf" - browse the collection by when you'd actually reach for it.
 const shelfCategories = [
@@ -14,6 +16,42 @@ const shelfCategories = [
   { title: 'Winter scents', blurb: 'Warm, cozy, and made to last through the cold.' },
   { title: 'Value / dupes', blurb: "What's worth it - and what smells close for less." },
 ]
+
+function scentTags(product) {
+  const haystack = [
+    product.name,
+    product.brand,
+    product.occasion,
+    product.description,
+    ...(product.fragranceNotes?.top || []),
+    ...(product.fragranceNotes?.heart || []),
+    ...(product.fragranceNotes?.base || []),
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+
+  const tags = []
+  const add = (label, tests) => {
+    if (tests.some((test) => haystack.includes(test)) && !tags.includes(label)) {
+      tags.push(label)
+    }
+  }
+
+  if (product.occasion) {
+    tags.push(product.occasion)
+  }
+  add('Fresh', ['fresh', 'clean', 'blue', 'ozonic', 'aquatic', 'marine'])
+  add('Citrus', ['orange', 'lemon', 'lime', 'bergamot', 'grapefruit', 'citrus', 'mandarin'])
+  add('Sweet', ['sweet', 'vanilla', 'tonka', 'toffee', 'caramel', 'honey', 'bubblegum'])
+  add('Tropical', ['mango', 'coconut', 'pineapple', 'tropical', 'rum', 'mojito'])
+  add('Spicy', ['spicy', 'pepper', 'saffron', 'cardamom', 'cinnamon', 'nutmeg'])
+  add('Woody', ['wood', 'cedar', 'sandalwood', 'vetiver', 'patchouli', 'oakmoss'])
+  add('Easy wear', ['inoffensive', 'office', 'everyday', 'versatile', 'daily'])
+  add('Strong', ['nuclear', 'lasts', 'projection', 'forever', 'room-filling'])
+
+  return tags.slice(0, 5)
+}
 
 function topNotesPreview(product) {
   const notes = product.fragranceNotes
@@ -44,7 +82,8 @@ function SmellsLikeEmHeader({ cartCount }) {
           <a href="#shelf">Categories</a>
           <a href="#reviews">Reviews</a>
           <a href="#about">About</a>
-          <Link to="/" className="sle-home-link">Sunbound Boheme ↗</Link>
+          <a href="#contact">Inquiries</a>
+          <Link to="/" className="sle-home-link">Sunbound Boheme {'->'}</Link>
           <Link to="/fragrances/cart" className="sle-cart-link">
             Cart{cartCount > 0 ? ` (${cartCount})` : ''}
           </Link>
@@ -103,7 +142,7 @@ function Fragrances() {
           </p>
           <div className="sle-hero-actions">
             <a href="#reviews" className="sle-btn">Read the latest review</a>
-            <a href="#reviews" className="sle-btn sle-btn-outline">Browse all reviews</a>
+            <a href="#contact" className="sle-btn sle-btn-outline">Ask about decants</a>
           </div>
         </div>
       </section>
@@ -177,6 +216,13 @@ function Fragrances() {
                       <span>Em's review</span>
                       <p>{product.description}</p>
                     </div>
+                    {scentTags(product).length > 0 && (
+                      <div className="sle-scent-tags" aria-label={`${product.name} quick tags`}>
+                        {scentTags(product).map((tag) => (
+                          <span key={tag}>{tag}</span>
+                        ))}
+                      </div>
+                    )}
                     {topNotesPreview(product).length > 0 && (
                       <div className="sle-note-chips" aria-label={`${product.name} notes`}>
                         {topNotesPreview(product).map((note) => (
@@ -205,6 +251,35 @@ function Fragrances() {
           ) : (
             <p className="sle-muted">First reviews dropping soon.</p>
           )}
+        </div>
+      </section>
+
+      <section className="sle-contact" id="contact">
+        <div className="sle-container sle-contact-grid">
+          <div>
+            <p className="sle-eyebrow">Questions about scents or decants?</p>
+            <h2>Email me what you are looking for.</h2>
+            <p>
+              Fragrance checkout is paused while I test everything, but you can still reach out
+              about scent inquiries, decant interest, sizes, pricing, or recommendations.
+            </p>
+            <p className="sle-location-note">
+              I am based out of Central Florida, so the closer the better :)
+            </p>
+          </div>
+          <div className="sle-contact-card">
+            <span>Email Em</span>
+            <a
+              href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`}
+              className="sle-email-link"
+            >
+              {CONTACT_EMAIL}
+            </a>
+            <p>
+              Send the fragrance name, the mL size you might want, and any questions.
+              I will help you figure out what makes sense before anything is finalized.
+            </p>
+          </div>
         </div>
       </section>
 

@@ -6,6 +6,9 @@ import { FALLBACK_PRODUCT_IMAGE, FRAGRANCE_FALLBACK_IMAGE } from '../utils/produ
 import SmellsLikeEmLayout from '../components/SmellsLikeEmLayout'
 import { buildApiUrl } from '../lib/api'
 
+const CONTACT_EMAIL = 'smellslikeem@gmail.com'
+const CONTACT_SUBJECT = 'Smells Like Em scent inquiry'
+
 function Product({ smellsLikeEm = false }) {
   const { id } = useParams()
   const { addToCart } = useCart()
@@ -209,6 +212,16 @@ function Product({ smellsLikeEm = false }) {
               <p className="product-pause-note">
                 Fragrance decants are browse-only while final testing is underway.
               </p>
+              <div className="product-email-card">
+                <span>Interested?</span>
+                <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(CONTACT_SUBJECT)}`}>
+                  Email {CONTACT_EMAIL}
+                </a>
+                <p>
+                  Ask about scent inquiries, decant sizes, pricing, or recommendations before
+                  checkout opens.
+                </p>
+              </div>
             </>
           ) : (
             <button
