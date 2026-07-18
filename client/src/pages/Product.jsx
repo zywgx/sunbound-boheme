@@ -168,7 +168,10 @@ function Product({ smellsLikeEm = false }) {
             </div>
           )}
 
-          <p className="product-description">{product.description}</p>
+          <div className="product-review-panel">
+            <span>Em's review</span>
+            <p>{product.description}</p>
+          </div>
 
           {smellsLikeEm && fragranceNotes && (
             <div className="fragrance-notes-panel">

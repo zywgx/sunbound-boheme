@@ -6,13 +6,13 @@ import { buildApiUrl } from '../lib/api'
 
 const API_URL = buildApiUrl('/products')
 
-// "The shelf" — browse the collection by when you'd actually reach for it.
+// "The shelf" - browse the collection by when you'd actually reach for it.
 const shelfCategories = [
   { title: 'Daily driver', blurb: 'Safe, versatile, compliment-getters you can wear on repeat.' },
   { title: 'Date night', blurb: 'The ones with a little more projection for when it counts.' },
   { title: 'Summer scents', blurb: 'Light, fresh, and built to last through the heat.' },
   { title: 'Winter scents', blurb: 'Warm, cozy, and made to last through the cold.' },
-  { title: 'Value / dupes', blurb: "What's worth it — and what smells close for less." },
+  { title: 'Value / dupes', blurb: "What's worth it - and what smells close for less." },
 ]
 
 function topNotesPreview(product) {
@@ -98,7 +98,7 @@ function Fragrances() {
           <h1>Scents you'll actually wear, reviewed by someone like you.</h1>
           <p className="sle-hero-text">
             No niche-collector gatekeeping. Just honest takes on the fragrances people actually
-            reach for — daily drivers, date-night picks, dupes, and the designer stuff worth the
+            reach for - daily drivers, date-night picks, dupes, and the designer stuff worth the
             price tag. Every scent is sold as a decant, so you can try before you commit.
           </p>
           <div className="sle-hero-actions">
@@ -146,7 +146,7 @@ function Fragrances() {
                 Show all scents
               </button>
             ) : (
-              <span className="sle-muted">Honest written takes — new ones added regularly.</span>
+              <span className="sle-muted">Honest written takes - new ones added regularly.</span>
             )}
           </div>
 
@@ -173,7 +173,10 @@ function Fragrances() {
                   <div className="sle-review-body">
                     {product.brand && <span className="sle-review-brand">{product.brand}</span>}
                     <h3>{product.name}</h3>
-                    <p className="sle-review-take">{product.description}</p>
+                    <div className="sle-review-take">
+                      <span>Em's review</span>
+                      <p>{product.description}</p>
+                    </div>
                     {topNotesPreview(product).length > 0 && (
                       <div className="sle-note-chips" aria-label={`${product.name} notes`}>
                         {topNotesPreview(product).map((note) => (
@@ -190,7 +193,7 @@ function Fragrances() {
             </div>
           ) : activeOccasion ? (
             <p className="sle-muted">
-              No scents tagged “{activeOccasion}” yet.{' '}
+              No scents tagged "{activeOccasion}" yet.{' '}
               <button
                 type="button"
                 className="sle-filter-clear"
@@ -212,7 +215,7 @@ function Fragrances() {
             <p>
               No brand deals, no affiliate pressure, no sugarcoating. I buy it, I wear it, I tell
               you what I think. Whether you're grabbing your first bottle or you've got a full
-              collection — if you want a real take from someone with no agenda, this is the place.
+              collection - if you want a real take from someone with no agenda, this is the place.
             </p>
           </div>
           <div className="sle-honesty-card">
@@ -229,7 +232,7 @@ function Fragrances() {
 
       <footer className="sle-footer">
         <div className="sle-container">
-          <p>Smells Like Em — honest fragrance reviews & decants.</p>
+          <p>Smells Like Em - honest fragrance reviews & decants.</p>
           <p className="sle-muted">
             Part of the{' '}
             <Link to="/" className="sle-footer-link">Sunbound Boheme</Link>{' '}

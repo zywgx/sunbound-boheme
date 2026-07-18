@@ -2611,13 +2611,28 @@ img {
 }
 
 .sle-review-take {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: rgba(42, 49, 25, 0.75);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin-top: 0.25rem;
+  padding: 0.78rem 0.85rem;
+  border: 1px solid rgba(124, 138, 76, 0.24);
+  border-radius: 12px;
+  background: rgba(244, 234, 214, 0.72);
+}
+
+.sle-review-take span {
+  display: block;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--sle-olive-deep);
+}
+
+.sle-review-take p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(42, 49, 25, 0.86);
 }
 
 .sle-review-price {
@@ -2892,4 +2907,39 @@ img {
 
 .sle-theme .product-pause-note {
   color: rgba(42, 49, 25, 0.72);
+}
+
+
+.product-review-panel {
+  margin: 1.1rem 0;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(111, 127, 93, 0.24);
+  background: rgba(244, 234, 214, 0.58);
+}
+
+.product-review-panel span {
+  display: block;
+  margin-bottom: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--forest);
+}
+
+.product-review-panel p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.sle-theme .product-review-panel {
+  border-color: rgba(124, 138, 76, 0.28);
+  background: rgba(244, 234, 214, 0.76);
+}
+
+.sle-theme .product-review-panel span {
+  color: var(--sle-olive-deep);
 }
