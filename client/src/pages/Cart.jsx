@@ -130,7 +130,7 @@ function Cart() {
           <div className="cart-layout">
             <div className="cart-items">
               {cartItems.map((item) => (
-                <div key={item.id} className="cart-item-card">
+                <div key={item.lineKey || item.id} className="cart-item-card">
                   <img
                     src={item.image || item.imageUrl}
                     alt={item.name}
@@ -140,18 +140,21 @@ function Cart() {
                   <div className="cart-item-details">
                     <p className="cart-item-category">{item.category}</p>
                     <h2>{item.name}</h2>
-                    <p className="cart-item-price">${item.price}</p>
+                    {item.variantLabel && (
+                      <p className="cart-item-variant">Size: {item.variantLabel}</p>
+                    )}
+                    <p className="cart-item-price">${Number(item.price).toFixed(2)}</p>
 
                     <div className="cart-item-actions">
                       <div className="quantity-control">
-                        <button onClick={() => decreaseQuantity(item.id)}>-</button>
+                        <button onClick={() => decreaseQuantity(item.lineKey)}>-</button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => increaseQuantity(item.id)}>+</button>
+                        <button onClick={() => increaseQuantity(item.lineKey)}>+</button>
                       </div>
 
                       <button
                         className="remove-btn"
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.lineKey)}
                       >
                         Remove
                       </button>

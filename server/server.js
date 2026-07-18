@@ -299,7 +299,9 @@ function buildDashboardMetrics(orders) {
 }
 
 function serializeCartReference(items) {
-  return items.map((item) => `${item.id}:${item.quantity}`).join(',')
+  return items
+    .map((item) => `${item.id}:${item.variantId || 0}:${item.quantity}`)
+    .join(',')
 }
 
 function parseCartReference(reference = '') {
@@ -308,9 +310,21 @@ function parseCartReference(reference = '') {
     .map((entry) => entry.trim())
     .filter(Boolean)
     .map((entry) => {
-      const [id, quantity] = entry.split(':')
+      const parts = entry.split(':')
+
+      // Older orders used the "id:quantity" format (no variants).
+      if (parts.length === 2) {
+        return {
+          id: Number(parts[0]),
+          variantId: null,
+          quantity: Number(parts[1]),
+        }
+      }
+
+      const [id, variantId, quantity] = parts
       return {
         id: Number(id),
+        variantId: Number(variantId) > 0 ? Number(variantId) : null,
         quantity: Number(quantity),
       }
     })
@@ -330,10 +344,12 @@ async function createOrderRecord({
           in: normalizedItems.map((item) => item.id),
         },
       },
+      include: { variants: true },
     })
     const productMap = new Map(products.map((product) => [product.id, product]))
 
-    for (const item of normalizedItems) {
+    // Resolve each purchased line to its product and (if any) chosen variant.
+    const resolvedItems = normalizedItems.map((item) => {
       const product = productMap.get(item.id)
 
       if (!product) {
@@ -344,29 +360,47 @@ async function createOrderRecord({
         throw new Error('Invalid purchase quantity.')
       }
 
-      if (product.quantity < item.quantity) {
+      const variant = item.variantId
+        ? (product.variants || []).find((v) => v.id === item.variantId)
+        : null
+
+      if (item.variantId && !variant) {
+        throw new Error(`A size for ${product.name} is no longer available.`)
+      }
+
+      const available = variant ? variant.quantity : product.quantity
+      if (available < item.quantity) {
         throw new Error(`${product.name} is no longer available in that quantity.`)
       }
-    }
 
-    for (const item of normalizedItems) {
-      const updateResult = await tx.product.updateMany({
-        where: {
-          id: item.id,
-          quantity: {
-            gte: item.quantity,
-          },
-        },
-        data: {
-          quantity: {
-            decrement: item.quantity,
-          },
-        },
-      })
+      return { item, product, variant }
+    })
 
-      if (updateResult.count === 0) {
-        const product = productMap.get(item.id)
-        throw new Error(`${product?.name || 'This item'} just sold out.`)
+    for (const { item, product, variant } of resolvedItems) {
+      if (variant) {
+        const variantUpdate = await tx.productVariant.updateMany({
+          where: { id: variant.id, quantity: { gte: item.quantity } },
+          data: { quantity: { decrement: item.quantity } },
+        })
+
+        if (variantUpdate.count === 0) {
+          throw new Error(`${product.name} (${variant.label}) just sold out.`)
+        }
+
+        // Keep the product's aggregate stock in step with its variants.
+        await tx.product.update({
+          where: { id: product.id },
+          data: { quantity: { decrement: item.quantity } },
+        })
+      } else {
+        const updateResult = await tx.product.updateMany({
+          where: { id: item.id, quantity: { gte: item.quantity } },
+          data: { quantity: { decrement: item.quantity } },
+        })
+
+        if (updateResult.count === 0) {
+          throw new Error(`${product.name || 'This item'} just sold out.`)
+        }
       }
     }
 
@@ -377,18 +411,16 @@ async function createOrderRecord({
         status: 'new',
         ...orderDetails,
         items: {
-          create: normalizedItems.map((item) => {
-            const product = productMap.get(item.id)
-
-            return {
-              productId: product.id,
-              name: product.name,
-              price: Number(product.price),
-              quantity: Number(item.quantity),
-              imageUrl: product.imageUrl || null,
-              category: product.category || null,
-            }
-          }),
+          create: resolvedItems.map(({ item, product, variant }) => ({
+            productId: product.id,
+            variantId: variant ? variant.id : null,
+            variantLabel: variant ? variant.label : null,
+            name: variant ? `${product.name} (${variant.label})` : product.name,
+            price: Number(variant ? variant.price : product.price),
+            quantity: Number(item.quantity),
+            imageUrl: product.imageUrl || null,
+            category: product.category || null,
+          })),
         },
       },
       include: {
@@ -427,6 +459,7 @@ async function fulfillCheckoutSession(checkoutSessionId, fallbackItems = []) {
 
   const normalizedItems = sourceItems.map((item) => ({
     id: Number(item.id),
+    variantId: item.variantId ? Number(item.variantId) : null,
     quantity: Number(item.quantity),
   }))
 
@@ -579,6 +612,7 @@ app.post('/create-checkout-session', async (req, res) => {
     }
     const requestedItems = cartItems.map((item) => ({
       id: Number(item.id),
+      variantId: item.variantId ? Number(item.variantId) : null,
       quantity: Number(item.quantity),
     }))
     const productIds = requestedItems.map((item) => item.id)
@@ -588,26 +622,62 @@ app.post('/create-checkout-session', async (req, res) => {
           in: productIds,
         },
       },
+      include: { variants: true },
     })
     const productMap = new Map(products.map((product) => [product.id, product]))
     const settings = await getStoreSettings()
 
-    for (const item of requestedItems) {
+    // Resolve the priced unit for a cart line: a specific variant when the
+    // product has sizes, otherwise the product itself.
+    function resolvePricedUnit(item) {
       const product = productMap.get(item.id)
-
       if (!product) {
-        return res.status(404).json({ error: 'One of the products no longer exists.' })
+        return { error: 'One of the products no longer exists.', status: 404 }
       }
 
       if (item.quantity <= 0) {
-        return res.status(400).json({ error: 'Invalid cart quantity.' })
+        return { error: 'Invalid cart quantity.', status: 400 }
+      }
+
+      if (item.variantId) {
+        const variant = (product.variants || []).find((v) => v.id === item.variantId)
+        if (!variant) {
+          return { error: `A size for ${product.name} is no longer available.`, status: 404 }
+        }
+        if (variant.quantity < item.quantity) {
+          return {
+            error: `${product.name} (${variant.label}) only has ${variant.quantity} left in stock.`,
+            status: 409,
+          }
+        }
+        return {
+          product,
+          name: `${product.name} — ${variant.label}`,
+          unitPrice: Number(variant.price),
+        }
+      }
+
+      if ((product.variants || []).length > 0) {
+        return { error: `Please choose a size for ${product.name}.`, status: 400 }
       }
 
       if (product.quantity < item.quantity) {
-        return res.status(409).json({
+        return {
           error: `${product.name} only has ${product.quantity} left in stock.`,
-        })
+          status: 409,
+        }
       }
+
+      return { product, name: product.name, unitPrice: Number(product.price) }
+    }
+
+    const resolvedUnits = []
+    for (const item of requestedItems) {
+      const resolved = resolvePricedUnit(item)
+      if (resolved.error) {
+        return res.status(resolved.status).json({ error: resolved.error })
+      }
+      resolvedUnits.push({ item, ...resolved })
     }
 
     const standardShippingCents = getStandardShippingCents(
@@ -616,26 +686,23 @@ app.post('/create-checkout-session', async (req, res) => {
       settings
     )
 
-    const lineItems = requestedItems.map((item) => {
-      const product = productMap.get(item.id)
-
-      return {
-        quantity: item.quantity,
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: product.name,
-            images: product.imageUrl ? [product.imageUrl] : [],
-            description: product.description || '',
-            metadata: {
-              productId: String(product.id),
-            },
+    const lineItems = resolvedUnits.map(({ item, product, name, unitPrice }) => ({
+      quantity: item.quantity,
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name,
+          images: product.imageUrl ? [product.imageUrl] : [],
+          description: product.description || '',
+          metadata: {
+            productId: String(product.id),
+            variantId: item.variantId ? String(item.variantId) : '',
           },
-          unit_amount: Math.round(Number(product.price) * 100),
-          tax_behavior: 'exclusive',
         },
-      }
-    })
+        unit_amount: Math.round(unitPrice * 100),
+        tax_behavior: 'exclusive',
+      },
+    }))
 
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: 'auto',
@@ -669,6 +736,7 @@ app.post('/orders', async (req, res) => {
 
     const fallbackItems = (cartItems || []).map((item) => ({
       id: Number(item.id),
+      variantId: item.variantId ? Number(item.variantId) : null,
       quantity: Number(item.quantity),
     }))
     let order

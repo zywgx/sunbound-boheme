@@ -60,6 +60,7 @@ function Header() {
         <nav className="nav-links">
           <Link to="/">Home</Link>
           <Link to="/shop">Shop</Link>
+          <Link to="/fragrances">Fragrances</Link>
           <Link to="/support">Support</Link>
           <Link to="/policies">Policies</Link>
           {showAdmin && <Link to="/admin">Admin</Link>}

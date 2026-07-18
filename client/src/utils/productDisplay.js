@@ -16,3 +16,12 @@ export const FALLBACK_PRODUCT_IMAGE =
 export function getProductPath(product) {
   return `/product/${product.slug || product.id}`
 }
+
+// A product counts as a fragrance if it was set up with fragrance details
+// (brand/type) or sold by size (variants).
+export function isFragranceProduct(product) {
+  return (
+    Boolean(product.fragranceType || product.brand) ||
+    (Array.isArray(product.variants) && product.variants.length > 0)
+  )
+}

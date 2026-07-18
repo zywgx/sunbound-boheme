@@ -35,6 +35,57 @@ function formatProduct(product) {
   return {
     ...product,
     galleryImages: parseGalleryImages(product.galleryImages),
+    variants: Array.isArray(product.variants)
+      ? [...product.variants]
+          .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)
+          .map((variant) => ({
+            id: variant.id,
+            label: variant.label,
+            price: Number(variant.price),
+            quantity: Number(variant.quantity),
+            sortOrder: variant.sortOrder,
+          }))
+      : [],
+  }
+}
+
+// Normalize a variants payload from the admin form into clean rows.
+// Returns [] when the product has no variants (a normal single-price item).
+function normalizeVariants(value) {
+  if (!Array.isArray(value)) {
+    return []
+  }
+
+  return value
+    .map((variant, index) => ({
+      label: String(variant?.label ?? '').trim(),
+      price: Number(variant?.price),
+      quantity: Number.parseInt(variant?.quantity, 10),
+      sortOrder: Number.isInteger(variant?.sortOrder) ? variant.sortOrder : index,
+    }))
+    .filter(
+      (variant) =>
+        variant.label &&
+        Number.isFinite(variant.price) &&
+        variant.price >= 0 &&
+        Number.isInteger(variant.quantity) &&
+        variant.quantity >= 0
+    )
+}
+
+// When a product has variants, its base price/quantity are derived from them
+// (lowest price shown as "from", total stock as availability).
+function deriveBaseFromVariants(variants, fallbackPrice, fallbackQuantity) {
+  if (!variants.length) {
+    return {
+      price: Number(fallbackPrice) || 0,
+      quantity: Number.parseInt(fallbackQuantity, 10) || 0,
+    }
+  }
+
+  return {
+    price: Math.min(...variants.map((variant) => variant.price)),
+    quantity: variants.reduce((total, variant) => total + variant.quantity, 0),
   }
 }
 
@@ -72,6 +123,7 @@ router.get('/', async (req, res) => {
   try {
     const products = await prisma.product.findMany({
       orderBy: { createdAt: 'desc' },
+      include: { variants: true },
     })
     res.json(products.map(formatProduct))
   } catch (error) {
@@ -88,9 +140,11 @@ router.get('/:id', async (req, res) => {
     const product = Number.isNaN(numericId)
       ? await prisma.product.findUnique({
           where: { slug: rawId },
+          include: { variants: true },
         })
       : await prisma.product.findUnique({
           where: { id: numericId },
+          include: { variants: true },
         })
 
     if (!product) {
@@ -118,20 +172,26 @@ router.post('/', requireAdmin, async (req, res) => {
       slug,
       shippingProfile,
       shippingCustomAmount,
+      brand,
+      fragranceType,
+      authenticityNote,
+      variants,
     } = req.body
     const resolvedSlug = await getUniqueSlug(slug || name)
+    const normalizedVariants = normalizeVariants(variants)
+    const base = deriveBaseFromVariants(normalizedVariants, price, quantity)
 
     const newProduct = await prisma.product.create({
       data: {
         name,
         slug: resolvedSlug,
-        price: Number(price),
+        price: base.price,
         description,
         imageUrl,
         galleryImages: serializeGalleryImages(galleryImages),
         category,
         size: size ? String(size).trim() : null,
-        quantity: Number(quantity),
+        quantity: base.quantity,
         shippingProfile: shippingProfile || 'standard',
         shippingCustomAmount:
           shippingCustomAmount === '' ||
@@ -139,7 +199,14 @@ router.post('/', requireAdmin, async (req, res) => {
           shippingCustomAmount === undefined
             ? null
             : Number(shippingCustomAmount),
+        brand: brand ? String(brand).trim() : null,
+        fragranceType: fragranceType ? String(fragranceType).trim() : null,
+        authenticityNote: authenticityNote ? String(authenticityNote).trim() : null,
+        variants: normalizedVariants.length
+          ? { create: normalizedVariants }
+          : undefined,
       },
+      include: { variants: true },
     })
 
     res.status(201).json(formatProduct(newProduct))
@@ -164,6 +231,10 @@ router.put('/:id', requireAdmin, async (req, res) => {
       slug,
       shippingProfile,
       shippingCustomAmount,
+      brand,
+      fragranceType,
+      authenticityNote,
+      variants,
     } = req.body
 
     const existingProduct = await prisma.product.findUnique({
@@ -174,26 +245,41 @@ router.put('/:id', requireAdmin, async (req, res) => {
       return res.status(404).json({ error: 'Product not found' })
     }
 
-    const updatedProduct = await prisma.product.update({
-      where: { id },
-      data: {
-        name,
-        slug: await getUniqueSlug(slug || name, id),
-        price: Number(price),
-        description,
-        imageUrl,
-        galleryImages: serializeGalleryImages(galleryImages),
-        category,
-        size: size ? String(size).trim() : null,
-        quantity: Number(quantity),
-        shippingProfile: shippingProfile || 'standard',
-        shippingCustomAmount:
-          shippingCustomAmount === '' ||
-          shippingCustomAmount === null ||
-          shippingCustomAmount === undefined
-            ? null
-            : Number(shippingCustomAmount),
-      },
+    const normalizedVariants = normalizeVariants(variants)
+    const base = deriveBaseFromVariants(normalizedVariants, price, quantity)
+
+    // Replace variants wholesale: clear the old rows, then recreate from the payload.
+    const updatedProduct = await prisma.$transaction(async (tx) => {
+      await tx.productVariant.deleteMany({ where: { productId: id } })
+
+      return tx.product.update({
+        where: { id },
+        data: {
+          name,
+          slug: await getUniqueSlug(slug || name, id),
+          price: base.price,
+          description,
+          imageUrl,
+          galleryImages: serializeGalleryImages(galleryImages),
+          category,
+          size: size ? String(size).trim() : null,
+          quantity: base.quantity,
+          shippingProfile: shippingProfile || 'standard',
+          shippingCustomAmount:
+            shippingCustomAmount === '' ||
+            shippingCustomAmount === null ||
+            shippingCustomAmount === undefined
+              ? null
+              : Number(shippingCustomAmount),
+          brand: brand ? String(brand).trim() : null,
+          fragranceType: fragranceType ? String(fragranceType).trim() : null,
+          authenticityNote: authenticityNote ? String(authenticityNote).trim() : null,
+          variants: normalizedVariants.length
+            ? { create: normalizedVariants }
+            : undefined,
+        },
+        include: { variants: true },
+      })
     })
 
     res.json(formatProduct(updatedProduct))

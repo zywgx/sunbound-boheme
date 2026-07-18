@@ -11,6 +11,7 @@ function Product() {
 
   const [product, setProduct] = useState(null)
   const [selectedImage, setSelectedImage] = useState('')
+  const [selectedVariant, setSelectedVariant] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -32,6 +33,16 @@ function Product() {
 
     fetchProduct()
   }, [id])
+
+  // Default to the first in-stock size once a product with variants loads.
+  useEffect(() => {
+    const variants = product?.variants
+    if (Array.isArray(variants) && variants.length > 0) {
+      setSelectedVariant(variants.find((variant) => variant.quantity > 0) || variants[0])
+    } else {
+      setSelectedVariant(null)
+    }
+  }, [product])
 
   if (loading) {
     return (
@@ -56,7 +67,14 @@ function Product() {
     )
   }
 
-  const isOutOfStock = product.quantity <= 0
+  const hasVariants = Array.isArray(product.variants) && product.variants.length > 0
+  const activePrice = hasVariants
+    ? Number(selectedVariant?.price ?? product.price)
+    : Number(product.price)
+  const activeStock = hasVariants
+    ? Number(selectedVariant?.quantity ?? 0)
+    : Number(product.quantity)
+  const isOutOfStock = activeStock <= 0
   const galleryImages = [
     product.imageUrl,
     ...(Array.isArray(product.galleryImages) ? product.galleryImages : []),
@@ -104,27 +122,72 @@ function Product() {
 
         <div className="product-detail-content">
           <p className="product-category">{product.category}</p>
+          {product.brand && <p className="product-brand">{product.brand}</p>}
           {product.size && <p className="product-size product-size-detail">Size {product.size}</p>}
 
           <h1 className="product-title">{product.name}</h1>
 
-          <p className="product-price large">${Number(product.price).toFixed(2)}</p>
+          <p className="product-price large">
+            ${activePrice.toFixed(2)}
+            {hasVariants && selectedVariant && (
+              <span className="product-price-unit"> / {selectedVariant.label}</span>
+            )}
+          </p>
+
+          {hasVariants && (
+            <div className="product-variant-picker">
+              <span className="product-variant-label">Choose a size</span>
+              <div className="product-variant-options">
+                {product.variants.map((variant) => {
+                  const soldOut = variant.quantity <= 0
+                  const isActive = selectedVariant?.id === variant.id
+                  return (
+                    <button
+                      key={variant.id}
+                      type="button"
+                      className={`variant-option${isActive ? ' is-active' : ''}${
+                        soldOut ? ' is-sold-out' : ''
+                      }`}
+                      onClick={() => setSelectedVariant(variant)}
+                      disabled={soldOut}
+                    >
+                      <span className="variant-option-label">{variant.label}</span>
+                      <span className="variant-option-price">
+                        ${Number(variant.price).toFixed(2)}
+                      </span>
+                      {soldOut && <span className="variant-option-note">Sold out</span>}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           <p className="product-description">{product.description}</p>
 
+          {product.authenticityNote && (
+            <p className="product-authenticity">{product.authenticityNote}</p>
+          )}
+
           <button
             className="btn product-btn"
-            onClick={() => addToCart(product)}
-            disabled={isOutOfStock}
+            onClick={() => addToCart(product, hasVariants ? selectedVariant : null)}
+            disabled={isOutOfStock || (hasVariants && !selectedVariant)}
           >
             {isOutOfStock ? 'Sold Out' : 'Add to Cart'}
           </button>
 
           <div className="product-info-box">
-            <p><strong>Size:</strong> {product.size || 'Not listed'}</p>
+            {product.brand && <p><strong>House:</strong> {product.brand}</p>}
+            {product.fragranceType && <p><strong>Type:</strong> {product.fragranceType}</p>}
+            {hasVariants ? (
+              selectedVariant && <p><strong>Size:</strong> {selectedVariant.label}</p>
+            ) : (
+              <p><strong>Size:</strong> {product.size || 'Not listed'}</p>
+            )}
             <p><strong>Shipping:</strong> Calculated at checkout</p>
             <p><strong>Returns:</strong> Case-by-case review</p>
-            <p><strong>Available:</strong> {product.quantity}</p>
+            <p><strong>Available:</strong> {activeStock}</p>
           </div>
 
           <Link to="/shop" className="back-link">

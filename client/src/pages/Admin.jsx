@@ -81,7 +81,14 @@ const emptyForm = {
   quantity: '',
   shippingProfile: 'standard',
   shippingCustomAmount: '',
+  isFragrance: false,
+  brand: '',
+  fragranceType: '',
+  authenticityNote: '',
+  variants: [],
 }
+
+const emptyVariant = { label: '', price: '', quantity: '' }
 
 function Admin({ loginOnly = false }) {
   const [products, setProducts] = useState([])
@@ -393,6 +400,7 @@ function Admin({ loginOnly = false }) {
   }
 
   function handleEdit(product) {
+    const productVariants = Array.isArray(product.variants) ? product.variants : []
     setEditingId(product.id)
     setForm({
       name: product.name || '',
@@ -406,9 +414,49 @@ function Admin({ loginOnly = false }) {
       quantity: product.quantity ?? '',
       shippingProfile: product.shippingProfile || 'standard',
       shippingCustomAmount: product.shippingCustomAmount ?? '',
+      isFragrance:
+        productVariants.length > 0 ||
+        Boolean(product.brand || product.fragranceType || product.authenticityNote),
+      brand: product.brand || '',
+      fragranceType: product.fragranceType || '',
+      authenticityNote: product.authenticityNote || '',
+      variants: productVariants.map((variant) => ({
+        label: variant.label || '',
+        price: variant.price ?? '',
+        quantity: variant.quantity ?? '',
+      })),
     })
     setError('')
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function handleToggleFragrance(e) {
+    const checked = e.target.checked
+    setForm((prev) => ({
+      ...prev,
+      isFragrance: checked,
+      variants: checked && prev.variants.length === 0 ? [{ ...emptyVariant }] : prev.variants,
+    }))
+  }
+
+  function handleVariantChange(index, field, value) {
+    setForm((prev) => ({
+      ...prev,
+      variants: prev.variants.map((variant, i) =>
+        i === index ? { ...variant, [field]: value } : variant
+      ),
+    }))
+  }
+
+  function addVariantRow() {
+    setForm((prev) => ({ ...prev, variants: [...prev.variants, { ...emptyVariant }] }))
+  }
+
+  function removeVariantRow(index) {
+    setForm((prev) => ({
+      ...prev,
+      variants: prev.variants.filter((_, i) => i !== index),
+    }))
   }
 
   function handleCancelEdit() {
@@ -529,15 +577,39 @@ function Admin({ loginOnly = false }) {
   async function handleSubmit(e) {
     e.preventDefault()
 
+    // Fragrances price/stock come from their sizes; normal items use the base fields.
+    const cleanedVariants = form.isFragrance
+      ? form.variants
+          .map((variant) => ({
+            label: String(variant.label || '').trim(),
+            price: Number(variant.price),
+            quantity: Number.parseInt(variant.quantity, 10),
+          }))
+          .filter(
+            (variant) =>
+              variant.label &&
+              Number.isFinite(variant.price) &&
+              variant.price >= 0 &&
+              Number.isInteger(variant.quantity) &&
+              variant.quantity >= 0
+          )
+      : []
+
+    const baseFieldsRequired = !form.isFragrance
+
     if (
       !form.name.trim() ||
-      !form.price ||
       !form.description.trim() ||
       !form.imageUrl.trim() ||
       !form.category.trim() ||
-      form.quantity === ''
+      (baseFieldsRequired && (!form.price || form.quantity === ''))
     ) {
       setError('Please fill out all fields.')
+      return
+    }
+
+    if (form.isFragrance && cleanedVariants.length === 0) {
+      setError('Add at least one size (label, price, and stock) for this fragrance.')
       return
     }
 
@@ -547,19 +619,23 @@ function Admin({ loginOnly = false }) {
 
       const payload = {
         name: form.name.trim(),
-        price: Number(form.price),
+        price: form.price === '' ? 0 : Number(form.price),
         description: form.description.trim(),
         imageUrl: form.imageUrl.trim(),
         galleryImages: form.galleryImages,
         category: form.category.trim(),
         size: (form.size === 'custom' ? form.customSize : form.size).trim() || null,
         slug: form.slug.trim(),
-        quantity: Number(form.quantity),
+        quantity: form.quantity === '' ? 0 : Number(form.quantity),
         shippingProfile: form.shippingProfile,
         shippingCustomAmount:
           form.shippingCustomAmount === ''
             ? null
             : Number(form.shippingCustomAmount),
+        brand: form.isFragrance ? form.brand.trim() : null,
+        fragranceType: form.isFragrance ? form.fragranceType.trim() : null,
+        authenticityNote: form.isFragrance ? form.authenticityNote.trim() : null,
+        variants: cleanedVariants,
       }
 
       const url = editingId ? `${API_URL}/${editingId}` : API_URL
@@ -938,15 +1014,17 @@ function Admin({ loginOnly = false }) {
                 onChange={handleChange}
               />
 
-              <input
-                type="number"
-                name="price"
-                placeholder="Price"
-                min="0"
-                step="0.01"
-                value={form.price}
-                onChange={handleChange}
-              />
+              {!form.isFragrance && (
+                <input
+                  type="number"
+                  name="price"
+                  placeholder="Price"
+                  min="0"
+                  step="0.01"
+                  value={form.price}
+                  onChange={handleChange}
+                />
+              )}
 
               <label className="admin-field-group">
                 <span>Category</span>
@@ -964,34 +1042,126 @@ function Admin({ loginOnly = false }) {
                 </select>
               </label>
 
-              <label className="admin-field-group">
-                <span>Size</span>
-                <select
-                  name="size"
-                  value={form.size}
-                  onChange={handleChange}
-                >
-                  <option value="">No size / not listed</option>
-                  {SIZE_OPTIONS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                  <option value="custom">Custom size label</option>
-                </select>
+              <label className="admin-fragrance-toggle">
+                <input
+                  type="checkbox"
+                  checked={form.isFragrance}
+                  onChange={handleToggleFragrance}
+                />
+                <span>This is a fragrance (sell by size / decant)</span>
               </label>
 
-              {form.size === 'custom' && (
-                <label className="admin-field-group">
-                  <span>Custom size label</span>
-                  <input
-                    type="text"
-                    name="customSize"
-                    placeholder="Example: 27 waist or Petite Small"
-                    value={form.customSize}
-                    onChange={handleChange}
-                  />
-                </label>
+              {form.isFragrance && (
+                <div className="admin-fragrance-fields">
+                  <label className="admin-field-group">
+                    <span>Fragrance house / brand</span>
+                    <input
+                      type="text"
+                      name="brand"
+                      placeholder="Example: Maison Margiela"
+                      value={form.brand}
+                      onChange={handleChange}
+                    />
+                  </label>
+
+                  <label className="admin-field-group">
+                    <span>Type</span>
+                    <select
+                      name="fragranceType"
+                      value={form.fragranceType}
+                      onChange={handleChange}
+                    >
+                      <option value="">Not specified</option>
+                      <option value="Decant">Decant</option>
+                      <option value="Full Bottle">Full Bottle</option>
+                    </select>
+                  </label>
+
+                  <label className="admin-field-group">
+                    <span>Authenticity / decant note (optional)</span>
+                    <textarea
+                      name="authenticityNote"
+                      placeholder="Example: Decanted from an authentic retail bottle into a labeled glass atomizer."
+                      value={form.authenticityNote}
+                      onChange={handleChange}
+                      rows={2}
+                    />
+                  </label>
+
+                  <div className="admin-variant-editor">
+                    <span className="admin-variant-title">Sizes & prices</span>
+                    {form.variants.map((variant, index) => (
+                      <div key={index} className="admin-variant-row">
+                        <input
+                          type="text"
+                          placeholder="Size (e.g. 5ml)"
+                          value={variant.label}
+                          onChange={(e) => handleVariantChange(index, 'label', e.target.value)}
+                        />
+                        <input
+                          type="number"
+                          placeholder="Price"
+                          min="0"
+                          step="0.01"
+                          value={variant.price}
+                          onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
+                        />
+                        <input
+                          type="number"
+                          placeholder="Stock"
+                          min="0"
+                          value={variant.quantity}
+                          onChange={(e) => handleVariantChange(index, 'quantity', e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          className="admin-variant-remove"
+                          onClick={() => removeVariantRow(index)}
+                          aria-label="Remove size"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ))}
+                    <button type="button" className="admin-variant-add" onClick={addVariantRow}>
+                      + Add another size
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {!form.isFragrance && (
+                <>
+                  <label className="admin-field-group">
+                    <span>Size</span>
+                    <select
+                      name="size"
+                      value={form.size}
+                      onChange={handleChange}
+                    >
+                      <option value="">No size / not listed</option>
+                      {SIZE_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                      <option value="custom">Custom size label</option>
+                    </select>
+                  </label>
+
+                  {form.size === 'custom' && (
+                    <label className="admin-field-group">
+                      <span>Custom size label</span>
+                      <input
+                        type="text"
+                        name="customSize"
+                        placeholder="Example: 27 waist or Petite Small"
+                        value={form.customSize}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  )}
+                </>
               )}
 
               <label className="admin-field-group">
@@ -1005,14 +1175,16 @@ function Admin({ loginOnly = false }) {
                 />
               </label>
 
-              <input
-                type="number"
-                name="quantity"
-                placeholder="Quantity"
-                min="0"
-                value={form.quantity}
-                onChange={handleChange}
-              />
+              {!form.isFragrance && (
+                <input
+                  type="number"
+                  name="quantity"
+                  placeholder="Quantity"
+                  min="0"
+                  value={form.quantity}
+                  onChange={handleChange}
+                />
+              )}
 
               <label className="admin-field-group">
                 <span>Shipping preset</span>
