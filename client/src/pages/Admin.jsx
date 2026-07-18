@@ -85,8 +85,17 @@ const emptyForm = {
   brand: '',
   fragranceType: '',
   authenticityNote: '',
+  occasion: '',
   variants: [],
 }
+
+const OCCASION_OPTIONS = [
+  'Daily driver',
+  'Date night',
+  'Summer scents',
+  'Winter scents',
+  'Value / dupes',
+]
 
 const emptyVariant = { label: '', price: '', quantity: '' }
 
@@ -420,6 +429,7 @@ function Admin({ loginOnly = false }) {
       brand: product.brand || '',
       fragranceType: product.fragranceType || '',
       authenticityNote: product.authenticityNote || '',
+      occasion: product.occasion || '',
       variants: productVariants.map((variant) => ({
         label: variant.label || '',
         price: variant.price ?? '',
@@ -635,6 +645,7 @@ function Admin({ loginOnly = false }) {
         brand: form.isFragrance ? form.brand.trim() : null,
         fragranceType: form.isFragrance ? form.fragranceType.trim() : null,
         authenticityNote: form.isFragrance ? form.authenticityNote.trim() : null,
+        occasion: form.isFragrance ? form.occasion.trim() : null,
         variants: cleanedVariants,
       }
 
@@ -1071,9 +1082,23 @@ function Admin({ loginOnly = false }) {
                       value={form.fragranceType}
                       onChange={handleChange}
                     >
-                      <option value="">Not specified</option>
                       <option value="Decant">Decant</option>
-                      <option value="Full Bottle">Full Bottle</option>
+                    </select>
+                  </label>
+
+                  <label className="admin-field-group">
+                    <span>Occasion (for "The shelf")</span>
+                    <select
+                      name="occasion"
+                      value={form.occasion}
+                      onChange={handleChange}
+                    >
+                      <option value="">Not categorized</option>
+                      {OCCASION_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
                     </select>
                   </label>
 

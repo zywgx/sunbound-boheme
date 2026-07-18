@@ -2,6 +2,7 @@
 import { useCart } from '../context/useCart'
 import { useEffect, useState } from 'react'
 import SunGraphic from '../components/SunGraphic'
+import SmellsLikeEmLayout from '../components/SmellsLikeEmLayout'
 
 const DEFAULT_SHIPPING_SETTINGS = {
   free: 0,
@@ -12,7 +13,7 @@ const DEFAULT_SHIPPING_SETTINGS = {
 const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000').replace(/\/+$/, '')
 const STORE_SETTINGS_URL = `${API_BASE_URL}/store-settings`
 
-function Cart() {
+function Cart({ smellsLikeEm = false }) {
   const {
     cartItems,
     increaseQuantity,
@@ -20,6 +21,10 @@ function Cart() {
     removeFromCart,
     subtotal,
   } = useCart()
+
+  const continueTo = smellsLikeEm ? '/fragrances' : '/shop'
+  const wrap = (content) =>
+    smellsLikeEm ? <SmellsLikeEmLayout>{content}</SmellsLikeEmLayout> : content
 
   const [loading, setLoading] = useState(false)
   const [shippingSettings, setShippingSettings] = useState(DEFAULT_SHIPPING_SETTINGS)
@@ -101,19 +106,19 @@ function Cart() {
     }
   }
 
-  return (
+  return wrap(
     <section className="section">
       <div className="container">
         <div className="cart-header">
           <div>
-            <SunGraphic className="page-sun" />
+            {!smellsLikeEm && <SunGraphic className="page-sun" />}
             <h1>Your Cart</h1>
             <p className="section-subtext">
               Review your items before checkout.
             </p>
           </div>
 
-          <Link to="/shop" className="cart-continue-link">
+          <Link to={continueTo} className="cart-continue-link">
             {'<- Continue Shopping'}
           </Link>
         </div>
@@ -122,8 +127,8 @@ function Cart() {
           <div className="cart-empty">
             <h2>Your cart is empty</h2>
             <p>Looks like you haven't added anything yet.</p>
-            <Link to="/shop" className="btn">
-              Browse Products
+            <Link to={continueTo} className="btn">
+              {smellsLikeEm ? 'Browse Scents' : 'Browse Products'}
             </Link>
           </div>
         ) : (

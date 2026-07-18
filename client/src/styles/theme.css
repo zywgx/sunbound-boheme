@@ -2356,3 +2356,413 @@ img {
   cursor: pointer;
   font-size: 0.88rem;
 }
+
+/* ============================================================
+   Smells Like Em — fragrance brand (green + cream identity)
+   Scoped under .sle-theme so it never touches Sunbound Boheme.
+   ============================================================ */
+.sle-theme {
+  --sle-olive: #7c8a4c;
+  --sle-olive-deep: #3c4826;
+  --sle-cream: #f4ead6;
+  --sle-cream-soft: #fbf6ec;
+  --sle-ink: #2a3119;
+  --sle-line: rgba(42, 49, 25, 0.14);
+
+  background: var(--sle-cream-soft);
+  color: var(--sle-ink);
+  min-height: 100vh;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.sle-container {
+  width: min(1120px, 92vw);
+  margin: 0 auto;
+}
+
+/* Header */
+.sle-header {
+  background: var(--sle-cream-soft);
+  border-bottom: 1px solid var(--sle-line);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.sle-nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sle-brand {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--sle-olive-deep);
+  text-decoration: none;
+}
+
+.sle-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-size: 0.98rem;
+}
+
+.sle-nav a {
+  color: var(--sle-ink);
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.sle-nav a:hover {
+  opacity: 1;
+}
+
+.sle-cart-link {
+  font-weight: 700;
+  color: var(--sle-olive-deep) !important;
+  opacity: 1 !important;
+}
+
+/* Hero */
+.sle-hero {
+  background: var(--sle-olive);
+  color: var(--sle-cream);
+  padding: 4.5rem 0 5rem;
+}
+
+.sle-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.75rem;
+  opacity: 0.85;
+  margin-bottom: 1.2rem;
+}
+
+.sle-hero h1 {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1.08;
+  max-width: 16ch;
+  margin-bottom: 1.3rem;
+}
+
+.sle-hero-text {
+  max-width: 54ch;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  opacity: 0.92;
+  margin-bottom: 1.8rem;
+}
+
+.sle-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.sle-btn {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  border-radius: 8px;
+  background: var(--sle-olive-deep);
+  color: var(--sle-cream);
+  text-decoration: none;
+  font-size: 0.95rem;
+  border: 1.5px solid var(--sle-olive-deep);
+  transition: opacity 0.15s ease;
+}
+
+.sle-btn:hover {
+  opacity: 0.9;
+}
+
+.sle-btn-outline {
+  background: transparent;
+  border-color: var(--sle-cream);
+  color: var(--sle-cream);
+}
+
+/* Sections */
+.sle-section {
+  padding: 3.5rem 0;
+  background: var(--sle-cream-soft);
+}
+
+.sle-section-alt {
+  background: var(--sle-cream);
+}
+
+.sle-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+.sle-section-head h2 {
+  font-size: 1.7rem;
+}
+
+.sle-muted {
+  color: rgba(42, 49, 25, 0.6);
+  font-size: 0.95rem;
+}
+
+/* The shelf */
+.sle-shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.sle-shelf-card {
+  background: var(--sle-cream-soft);
+  border: 1px solid var(--sle-line);
+  border-radius: 14px;
+  padding: 1.2rem;
+}
+
+.sle-shelf-tag {
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  color: var(--sle-olive);
+  margin-bottom: 0.6rem;
+}
+
+.sle-shelf-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.sle-shelf-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(42, 49, 25, 0.75);
+}
+
+/* Reviews / decant cards */
+.sle-review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.4rem;
+}
+
+.sle-review-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--sle-cream-soft);
+  border: 1px solid var(--sle-line);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sle-review-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(42, 49, 25, 0.12);
+}
+
+.sle-review-image {
+  aspect-ratio: 4 / 3;
+  background: var(--sle-cream);
+  overflow: hidden;
+}
+
+.sle-review-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sle-review-body {
+  padding: 1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sle-review-brand {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.68rem;
+  color: var(--sle-olive);
+}
+
+.sle-review-body h3 {
+  font-size: 1.15rem;
+}
+
+.sle-review-take {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(42, 49, 25, 0.75);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sle-review-price {
+  margin-top: 0.3rem;
+  font-weight: 700;
+  color: var(--sle-olive-deep);
+}
+
+/* Honesty / about */
+.sle-honesty {
+  background: var(--sle-olive-deep);
+  color: var(--sle-cream);
+  padding: 4rem 0;
+}
+
+.sle-honesty-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.sle-honesty h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.sle-honesty p {
+  line-height: 1.65;
+  opacity: 0.9;
+  max-width: 52ch;
+}
+
+.sle-honesty-card {
+  background: var(--sle-olive);
+  border-radius: 16px;
+  padding: 1.6rem;
+}
+
+.sle-honesty-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  opacity: 0.85;
+}
+
+.sle-honesty-card h3 {
+  font-size: 1.3rem;
+  margin: 0.4rem 0 0.9rem;
+}
+
+.sle-honesty-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.sle-honesty-card li {
+  padding-left: 1.2rem;
+  position: relative;
+  line-height: 1.4;
+}
+
+.sle-honesty-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  opacity: 0.8;
+}
+
+/* Footer */
+.sle-footer {
+  background: var(--sle-olive-deep);
+  color: var(--sle-cream);
+  padding: 1.6rem 0 2rem;
+  text-align: center;
+  border-top: 1px solid rgba(244, 234, 214, 0.15);
+}
+
+.sle-footer .sle-muted {
+  color: rgba(244, 234, 214, 0.6);
+}
+
+@media (max-width: 720px) {
+  .sle-honesty-grid {
+    grid-template-columns: 1fr;
+  }
+  .sle-nav {
+    gap: 0.9rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Smells Like Em — green overrides for the shared product & cart components */
+.sle-theme .section { background: transparent; }
+.sle-theme .btn {
+  background: var(--sle-olive-deep);
+  border: 1.5px solid var(--sle-olive-deep);
+  color: var(--sle-cream);
+}
+.sle-theme .btn:hover { opacity: 0.9; }
+.sle-theme .btn-outline,
+.sle-theme .btn-secondary {
+  background: transparent;
+  color: var(--sle-olive-deep);
+  border: 1.5px solid var(--sle-olive-deep);
+}
+.sle-theme .product-price.large { color: var(--sle-ink); }
+.sle-theme .product-price-unit,
+.sle-theme .product-brand,
+.sle-theme .product-category,
+.sle-theme .product-variant-label,
+.sle-theme .variant-option-price { color: var(--sle-olive); }
+.sle-theme .variant-option:hover { border-color: var(--sle-olive); }
+.sle-theme .variant-option.is-active {
+  border-color: var(--sle-olive);
+  background: rgba(124, 138, 76, 0.15);
+}
+.sle-theme .product-authenticity {
+  border-left-color: var(--sle-olive);
+  background: rgba(124, 138, 76, 0.12);
+  color: var(--sle-ink);
+}
+.sle-theme .back-link,
+.sle-theme .cart-continue-link,
+.sle-theme .cart-item-variant,
+.sle-theme .cart-item-price { color: var(--sle-olive-deep); }
+.sle-theme .checkout-btn { background: var(--sle-olive-deep); border-color: var(--sle-olive-deep); }
+
+/* Smells Like Em — interactive shelf filtering */
+.sle-theme .sle-shelf-card {
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+.sle-theme .sle-shelf-card:hover {
+  border-color: var(--sle-olive);
+  transform: translateY(-2px);
+}
+.sle-theme .sle-shelf-card.is-active {
+  border-color: var(--sle-olive);
+  background: rgba(124, 138, 76, 0.16);
+}
+.sle-filter-clear {
+  border: none;
+  background: none;
+  color: var(--sle-olive-deep);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}

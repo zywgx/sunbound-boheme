@@ -13,8 +13,27 @@ export const FALLBACK_PRODUCT_IMAGE =
     </svg>
   `)
 
+// Neutral placeholder for the Smells Like Em brand (no Sunbound wording).
+export const FRAGRANCE_FALLBACK_IMAGE =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450">
+      <rect width="600" height="450" fill="#e9e2cd"/>
+      <rect x="250" y="150" width="100" height="170" rx="14" fill="#7c8a4c"/>
+      <rect x="278" y="120" width="44" height="34" rx="6" fill="#3c4826"/>
+      <text x="50%" y="380" text-anchor="middle" fill="#3c4826" font-family="Georgia, serif" font-size="26">
+        Smells Like Em
+      </text>
+    </svg>
+  `)
+
 export function getProductPath(product) {
-  return `/product/${product.slug || product.id}`
+  const identifier = product.slug || product.id
+  // Fragrances live under the Smells Like Em brand and keep its chrome.
+  if (isFragranceProduct(product)) {
+    return `/fragrances/${identifier}`
+  }
+  return `/product/${identifier}`
 }
 
 // A product counts as a fragrance if it was set up with fragrance details

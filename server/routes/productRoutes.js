@@ -175,6 +175,7 @@ router.post('/', requireAdmin, async (req, res) => {
       brand,
       fragranceType,
       authenticityNote,
+      occasion,
       variants,
     } = req.body
     const resolvedSlug = await getUniqueSlug(slug || name)
@@ -202,6 +203,7 @@ router.post('/', requireAdmin, async (req, res) => {
         brand: brand ? String(brand).trim() : null,
         fragranceType: fragranceType ? String(fragranceType).trim() : null,
         authenticityNote: authenticityNote ? String(authenticityNote).trim() : null,
+        occasion: occasion ? String(occasion).trim() : null,
         variants: normalizedVariants.length
           ? { create: normalizedVariants }
           : undefined,
@@ -234,6 +236,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
       brand,
       fragranceType,
       authenticityNote,
+      occasion,
       variants,
     } = req.body
 

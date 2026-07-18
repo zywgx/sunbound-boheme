@@ -2,12 +2,18 @@
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useCart } from '../context/useCart'
-import { FALLBACK_PRODUCT_IMAGE } from '../utils/productDisplay'
+import { FALLBACK_PRODUCT_IMAGE, FRAGRANCE_FALLBACK_IMAGE } from '../utils/productDisplay'
+import SmellsLikeEmLayout from '../components/SmellsLikeEmLayout'
 import { buildApiUrl } from '../lib/api'
 
-function Product() {
+function Product({ smellsLikeEm = false }) {
   const { id } = useParams()
   const { addToCart } = useCart()
+  const backTo = smellsLikeEm ? '/fragrances' : '/shop'
+  const backLabel = smellsLikeEm ? '<- Back to Smells Like Em' : '<- Back to Shop'
+  const wrap = (content) =>
+    smellsLikeEm ? <SmellsLikeEmLayout>{content}</SmellsLikeEmLayout> : content
+  const fallbackImg = smellsLikeEm ? FRAGRANCE_FALLBACK_IMAGE : FALLBACK_PRODUCT_IMAGE
 
   const [product, setProduct] = useState(null)
   const [selectedImage, setSelectedImage] = useState('')
@@ -22,7 +28,7 @@ function Product() {
         setError('')
         const response = await axios.get(buildApiUrl(`/products/${id}`))
         setProduct(response.data)
-        setSelectedImage(response.data.imageUrl || FALLBACK_PRODUCT_IMAGE)
+        setSelectedImage(response.data.imageUrl || fallbackImg)
       } catch (err) {
         console.error('Failed to fetch product:', err)
         setError('Product not found.')
@@ -45,7 +51,7 @@ function Product() {
   }, [product])
 
   if (loading) {
-    return (
+    return wrap(
       <section className="section">
         <div className="container">
           <h1>Loading product...</h1>
@@ -55,12 +61,12 @@ function Product() {
   }
 
   if (error || !product) {
-    return (
+    return wrap(
       <section className="section">
         <div className="container">
           <h1>Product not found</h1>
-          <Link to="/shop" className="btn">
-            Back to Shop
+          <Link to={backTo} className="btn">
+            {smellsLikeEm ? 'Back to Smells Like Em' : 'Back to Shop'}
           </Link>
         </div>
       </section>
@@ -79,9 +85,9 @@ function Product() {
     product.imageUrl,
     ...(Array.isArray(product.galleryImages) ? product.galleryImages : []),
   ].filter((imageUrl, index, images) => imageUrl && images.indexOf(imageUrl) === index)
-  const activeImage = selectedImage || product.imageUrl || FALLBACK_PRODUCT_IMAGE
+  const activeImage = selectedImage || product.imageUrl || fallbackImg
 
-  return (
+  return wrap(
     <section className="section">
       <div className="container product-page">
         <div className="product-image-wrapper">
@@ -91,7 +97,7 @@ function Product() {
             className="product-detail-image"
             onError={(event) => {
               event.currentTarget.onerror = null
-              event.currentTarget.src = FALLBACK_PRODUCT_IMAGE
+              event.currentTarget.src = fallbackImg
             }}
           />
 
@@ -111,7 +117,7 @@ function Product() {
                     alt={`${product.name} view ${index + 1}`}
                     onError={(event) => {
                       event.currentTarget.onerror = null
-                      event.currentTarget.src = FALLBACK_PRODUCT_IMAGE
+                      event.currentTarget.src = fallbackImg
                     }}
                   />
                 </button>
@@ -190,8 +196,8 @@ function Product() {
             <p><strong>Available:</strong> {activeStock}</p>
           </div>
 
-          <Link to="/shop" className="back-link">
-            {'<- Back to Shop'}
+          <Link to={backTo} className="back-link">
+            {backLabel}
           </Link>
         </div>
       </div>

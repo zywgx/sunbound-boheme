@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -13,15 +13,22 @@ import CheckoutSuccess from './pages/CheckoutSuccess'
 import CheckoutCancel from './pages/CheckoutCancel'
 
 function App() {
+  const location = useLocation()
+  // The fragrance section is its own brand ("Smells Like Em") and supplies
+  // its own header/footer, so hide the Sunbound chrome there.
+  const isSmellsLikeEm = location.pathname.startsWith('/fragrances')
+
   return (
     <div className="app-shell">
-      <Header />
+      {!isSmellsLikeEm && <Header />}
 
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/fragrances" element={<Fragrances />} />
+          <Route path="/fragrances/cart" element={<Cart smellsLikeEm />} />
+          <Route path="/fragrances/:id" element={<Product smellsLikeEm />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/support" element={<Support />} />
@@ -34,7 +41,7 @@ function App() {
         </Routes>
       </main>
 
-      <Footer />
+      {!isSmellsLikeEm && <Footer />}
     </div>
   )
 }
