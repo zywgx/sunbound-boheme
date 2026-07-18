@@ -36,11 +36,18 @@ export function getProductPath(product) {
   return `/product/${identifier}`
 }
 
-// A product counts as a fragrance if it was set up with fragrance details
-// (brand/type) or sold by size (variants).
-export function isFragranceProduct(product) {
-  return (
-    Boolean(product.fragranceType || product.brand) ||
-    (Array.isArray(product.variants) && product.variants.length > 0)
+function hasFragranceMetadata(product) {
+  return Boolean(
+    product?.brand ||
+    product?.fragranceType ||
+    product?.authenticityNote ||
+    product?.occasion
   )
+}
+
+// A product counts as a fragrance only when it carries fragrance-specific
+// metadata. This avoids routing future size-based apparel variants into the
+// fragrance storefront.
+export function isFragranceProduct(product) {
+  return hasFragranceMetadata(product)
 }

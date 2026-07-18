@@ -1,14 +1,12 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
-import { useCart } from '../context/useCart'
 import { FALLBACK_PRODUCT_IMAGE, FRAGRANCE_FALLBACK_IMAGE } from '../utils/productDisplay'
 import SmellsLikeEmLayout from '../components/SmellsLikeEmLayout'
 import { buildApiUrl } from '../lib/api'
 
 function Product({ smellsLikeEm = false }) {
   const { id } = useParams()
-  const { addToCart } = useCart()
   const backTo = smellsLikeEm ? '/fragrances' : '/shop'
   const backLabel = smellsLikeEm ? '<- Back to Smells Like Em' : '<- Back to Shop'
   const wrap = (content) =>
@@ -86,6 +84,7 @@ function Product({ smellsLikeEm = false }) {
     ...(Array.isArray(product.galleryImages) ? product.galleryImages : []),
   ].filter((imageUrl, index, images) => imageUrl && images.indexOf(imageUrl) === index)
   const activeImage = selectedImage || product.imageUrl || fallbackImg
+  const fragranceNotes = product.fragranceNotes || null
 
   return wrap(
     <section className="section">
@@ -171,17 +170,43 @@ function Product({ smellsLikeEm = false }) {
 
           <p className="product-description">{product.description}</p>
 
+          {smellsLikeEm && fragranceNotes && (
+            <div className="fragrance-notes-panel">
+              <span className="fragrance-notes-kicker">Fragrance notes</span>
+              <div className="fragrance-notes-grid">
+                {[
+                  ['Top', fragranceNotes.top],
+                  ['Heart', fragranceNotes.heart],
+                  ['Base', fragranceNotes.base],
+                ].map(([label, notes]) => (
+                  Array.isArray(notes) && notes.length > 0 ? (
+                    <div className="fragrance-note-column" key={label}>
+                      <strong>{label}</strong>
+                      <p>{notes.join(', ')}</p>
+                    </div>
+                  ) : null
+                ))}
+              </div>
+              {fragranceNotes.sourceType && (
+                <p className="fragrance-notes-source">Notes source: {fragranceNotes.sourceType}</p>
+              )}
+            </div>
+          )}
+
           {product.authenticityNote && (
             <p className="product-authenticity">{product.authenticityNote}</p>
           )}
 
           <button
             className="btn product-btn"
-            onClick={() => addToCart(product, hasVariants ? selectedVariant : null)}
-            disabled={isOutOfStock || (hasVariants && !selectedVariant)}
+            type="button"
+            disabled
           >
-            {isOutOfStock ? 'Sold Out' : 'Add to Cart'}
+            Ordering Paused
           </button>
+          <p className="product-pause-note">
+            Online purchases are temporarily disabled while the decant list is being finalized.
+          </p>
 
           <div className="product-info-box">
             {product.brand && <p><strong>House:</strong> {product.brand}</p>}
@@ -191,7 +216,7 @@ function Product({ smellsLikeEm = false }) {
             ) : (
               <p><strong>Size:</strong> {product.size || 'Not listed'}</p>
             )}
-            <p><strong>Shipping:</strong> Calculated at checkout</p>
+            <p><strong>Shipping:</strong> Checkout paused for now</p>
             <p><strong>Returns:</strong> Case-by-case review</p>
             <p><strong>Available:</strong> {activeStock}</p>
           </div>

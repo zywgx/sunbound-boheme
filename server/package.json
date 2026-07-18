@@ -4,9 +4,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run db:sync && npm run seed:fragrances && node server.js",
     "hash:admin": "node scripts/hash-password.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:server": "node server.js",
+    "db:sync": "prisma db push --accept-data-loss",
+    "seed:fragrances": "node scripts/import-fragrance-batch.js && node scripts/remove-placeholder-fragrances.js"
   },
   "keywords": [],
   "author": "",

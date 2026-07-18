@@ -2,8 +2,8 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 
-const HOST = '127.0.0.1'
-const PORT = 4173
+const HOST = process.env.HOST || '127.0.0.1'
+const PORT = Number(process.env.PORT || 4173)
 const distDir = path.join(__dirname, 'dist')
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',

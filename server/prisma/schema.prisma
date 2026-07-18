@@ -24,6 +24,7 @@ model Product {
   fragranceType         String?
   authenticityNote      String?
   occasion              String?
+  fragranceNotes        String?
   variants              ProductVariant[]
   createdAt             DateTime @default(now())
 }

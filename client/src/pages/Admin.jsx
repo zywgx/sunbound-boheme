@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { buildApiUrl } from '../lib/api'
+import { isFragranceProduct } from '../utils/productDisplay'
 
 const API_URL = buildApiUrl('/products')
 const ORDERS_URL = buildApiUrl('/orders')
@@ -218,6 +219,10 @@ function Admin({ loginOnly = false }) {
       : CATEGORY_OPTIONS
   }
 
+  function isFragranceCatalogItem(product) {
+    return isFragranceProduct(product)
+  }
+
   function resolveSizeFormFields(sizeValue = '') {
     if (!sizeValue) {
       return {
@@ -423,9 +428,7 @@ function Admin({ loginOnly = false }) {
       quantity: product.quantity ?? '',
       shippingProfile: product.shippingProfile || 'standard',
       shippingCustomAmount: product.shippingCustomAmount ?? '',
-      isFragrance:
-        productVariants.length > 0 ||
-        Boolean(product.brand || product.fragranceType || product.authenticityNote),
+      isFragrance: isFragranceCatalogItem(product),
       brand: product.brand || '',
       fragranceType: product.fragranceType || '',
       authenticityNote: product.authenticityNote || '',
@@ -1380,10 +1383,32 @@ function Admin({ loginOnly = false }) {
                     <div className="admin-product-info">
                       <h3>{product.name}</h3>
                       <p>{product.category}</p>
+                      {isFragranceCatalogItem(product) && product.brand && (
+                        <p>House: {product.brand}</p>
+                      )}
+                      {isFragranceCatalogItem(product) && product.occasion && (
+                        <p>Occasion: {product.occasion}</p>
+                      )}
                       {product.size && <p>Size: {product.size}</p>}
                       {product.slug && <p>Slug: {product.slug}</p>}
                       <p>${Number(product.price).toFixed(2)}</p>
                       <p>Qty: {product.quantity}</p>
+                      {Array.isArray(product.variants) && product.variants.length > 0 && (
+                        <p>
+                          Sizes:{' '}
+                          {product.variants
+                            .map(
+                              (variant) =>
+                                variant.label +
+                                ' ($' +
+                                Number(variant.price).toFixed(2) +
+                                ', qty ' +
+                                variant.quantity +
+                                ')'
+                            )
+                            .join(' | ')}
+                        </p>
+                      )}
                       <p>
                         Shipping:{' '}
                         {product.shippingCustomAmount !== null &&

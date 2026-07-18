@@ -1,4 +1,4 @@
-﻿import express from 'express'
+import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import Stripe from 'stripe'
@@ -37,6 +37,8 @@ const FRONTEND_URLS = [
   'http://127.0.0.1:5173',
   'http://localhost:4173',
   'http://127.0.0.1:4173',
+  'http://localhost:4180',
+  'http://127.0.0.1:4180',
 ]
 const allowedOrigins = new Set(FRONTEND_URLS.filter(Boolean))
 
@@ -604,6 +606,10 @@ app.put('/store-settings', requireAdmin, async (req, res) => {
 app.use('/products', productRoutes)
 
 app.post('/create-checkout-session', async (req, res) => {
+  return res.status(503).json({
+    error: 'Checkout is temporarily disabled while the catalog is being finalized.',
+  })
+
   try {
     const { cartItems } = req.body
 
@@ -652,7 +658,7 @@ app.post('/create-checkout-session', async (req, res) => {
         }
         return {
           product,
-          name: `${product.name} — ${variant.label}`,
+          name: `${product.name} - ${variant.label}`,
           unitPrice: Number(variant.price),
         }
       }

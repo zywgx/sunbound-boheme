@@ -15,6 +15,17 @@ const shelfCategories = [
   { title: 'Value / dupes', blurb: "What's worth it — and what smells close for less." },
 ]
 
+function topNotesPreview(product) {
+  const notes = product.fragranceNotes
+  if (!notes) {
+    return []
+  }
+
+  const top = Array.isArray(notes.top) ? notes.top : []
+  const heart = Array.isArray(notes.heart) ? notes.heart : []
+  return [...top, ...heart].slice(0, 4)
+}
+
 function fromPrice(product) {
   if (Array.isArray(product.variants) && product.variants.length > 0) {
     return Math.min(...product.variants.map((variant) => Number(variant.price)))
@@ -163,6 +174,13 @@ function Fragrances() {
                     {product.brand && <span className="sle-review-brand">{product.brand}</span>}
                     <h3>{product.name}</h3>
                     <p className="sle-review-take">{product.description}</p>
+                    {topNotesPreview(product).length > 0 && (
+                      <div className="sle-note-chips" aria-label={`${product.name} notes`}>
+                        {topNotesPreview(product).map((note) => (
+                          <span key={note}>{note}</span>
+                        ))}
+                      </div>
+                    )}
                     <span className="sle-review-price">
                       Decants from ${fromPrice(product).toFixed(2)}
                     </span>

@@ -31,10 +31,37 @@ function serializeGalleryImages(value) {
   return JSON.stringify(parseGalleryImages(value))
 }
 
+function parseFragranceNotes(value) {
+  if (!value) {
+    return null
+  }
+
+  if (typeof value === 'object') {
+    return value
+  }
+
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value)
+      return parsed && typeof parsed === 'object' ? parsed : null
+    } catch {
+      return null
+    }
+  }
+
+  return null
+}
+
+function serializeFragranceNotes(value) {
+  const parsed = parseFragranceNotes(value)
+  return parsed ? JSON.stringify(parsed) : null
+}
+
 function formatProduct(product) {
   return {
     ...product,
     galleryImages: parseGalleryImages(product.galleryImages),
+    fragranceNotes: parseFragranceNotes(product.fragranceNotes),
     variants: Array.isArray(product.variants)
       ? [...product.variants]
           .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)
@@ -176,6 +203,7 @@ router.post('/', requireAdmin, async (req, res) => {
       fragranceType,
       authenticityNote,
       occasion,
+      fragranceNotes,
       variants,
     } = req.body
     const resolvedSlug = await getUniqueSlug(slug || name)
@@ -204,6 +232,7 @@ router.post('/', requireAdmin, async (req, res) => {
         fragranceType: fragranceType ? String(fragranceType).trim() : null,
         authenticityNote: authenticityNote ? String(authenticityNote).trim() : null,
         occasion: occasion ? String(occasion).trim() : null,
+        fragranceNotes: serializeFragranceNotes(fragranceNotes),
         variants: normalizedVariants.length
           ? { create: normalizedVariants }
           : undefined,
@@ -237,6 +266,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
       fragranceType,
       authenticityNote,
       occasion,
+      fragranceNotes,
       variants,
     } = req.body
 
@@ -277,6 +307,8 @@ router.put('/:id', requireAdmin, async (req, res) => {
           brand: brand ? String(brand).trim() : null,
           fragranceType: fragranceType ? String(fragranceType).trim() : null,
           authenticityNote: authenticityNote ? String(authenticityNote).trim() : null,
+          occasion: occasion ? String(occasion).trim() : null,
+          fragranceNotes: serializeFragranceNotes(fragranceNotes),
           variants: normalizedVariants.length
             ? { create: normalizedVariants }
             : undefined,
