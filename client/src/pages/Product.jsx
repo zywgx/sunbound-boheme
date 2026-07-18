@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
+import { useCart } from '../context/useCart'
 import { FALLBACK_PRODUCT_IMAGE, FRAGRANCE_FALLBACK_IMAGE } from '../utils/productDisplay'
 import SmellsLikeEmLayout from '../components/SmellsLikeEmLayout'
 import { buildApiUrl } from '../lib/api'
 
 function Product({ smellsLikeEm = false }) {
   const { id } = useParams()
+  const { addToCart } = useCart()
   const backTo = smellsLikeEm ? '/fragrances' : '/shop'
   const backLabel = smellsLikeEm ? '<- Back to Smells Like Em' : '<- Back to Shop'
   const wrap = (content) =>
@@ -199,17 +201,24 @@ function Product({ smellsLikeEm = false }) {
           {product.authenticityNote && (
             <p className="product-authenticity">{product.authenticityNote}</p>
           )}
-
-          <button
-            className="btn product-btn"
-            type="button"
-            disabled
-          >
-            Ordering Paused
-          </button>
-          <p className="product-pause-note">
-            Online purchases are temporarily disabled while the decant list is being finalized.
-          </p>
+          {smellsLikeEm ? (
+            <>
+              <button className="btn product-btn" type="button" disabled>
+                Fragrance Testing Paused
+              </button>
+              <p className="product-pause-note">
+                Fragrance decants are browse-only while final testing is underway.
+              </p>
+            </>
+          ) : (
+            <button
+              className="btn product-btn"
+              onClick={() => addToCart(product, hasVariants ? selectedVariant : null)}
+              disabled={isOutOfStock || (hasVariants && !selectedVariant)}
+            >
+              {isOutOfStock ? 'Sold Out' : 'Add to Cart'}
+            </button>
+          )}
 
           <div className="product-info-box">
             {product.brand && <p><strong>House:</strong> {product.brand}</p>}
@@ -219,7 +228,7 @@ function Product({ smellsLikeEm = false }) {
             ) : (
               <p><strong>Size:</strong> {product.size || 'Not listed'}</p>
             )}
-            <p><strong>Shipping:</strong> Checkout paused for now</p>
+            <p><strong>Shipping:</strong> Calculated at checkout</p>
             <p><strong>Returns:</strong> Case-by-case review</p>
             <p><strong>Available:</strong> {activeStock}</p>
           </div>

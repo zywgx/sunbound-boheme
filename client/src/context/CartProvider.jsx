@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import CartContext from './CartContext'
+import { isFragranceProduct } from '../utils/productDisplay'
 
 // A cart line is identified by product id plus the chosen variant (if any),
 // so the same fragrance in two sizes lives on two separate lines.
@@ -21,7 +22,9 @@ export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('sunbound-cart')
     const parsed = savedCart ? JSON.parse(savedCart) : []
-    return Array.isArray(parsed) ? parsed.map(withLineKey) : []
+    return Array.isArray(parsed)
+      ? parsed.map(withLineKey).filter((item) => !isFragranceProduct(item))
+      : []
   })
 
   useEffect(() => {
@@ -29,6 +32,10 @@ export function CartProvider({ children }) {
   }, [cartItems])
 
   function addToCart(product, variant = null) {
+    if (isFragranceProduct(product)) {
+      return
+    }
+
     setCartItems((prevItems) => {
       const variantId = variant?.id ?? null
       const lineKey = buildLineKey(product.id, variantId)

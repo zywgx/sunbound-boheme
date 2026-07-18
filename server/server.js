@@ -606,9 +606,6 @@ app.put('/store-settings', requireAdmin, async (req, res) => {
 app.use('/products', productRoutes)
 
 app.post('/create-checkout-session', async (req, res) => {
-  return res.status(503).json({
-    error: 'Checkout is temporarily disabled while the catalog is being finalized.',
-  })
 
   try {
     const { cartItems } = req.body
@@ -643,6 +640,13 @@ app.post('/create-checkout-session', async (req, res) => {
 
       if (item.quantity <= 0) {
         return { error: 'Invalid cart quantity.', status: 400 }
+      }
+
+      if (product.brand || product.fragranceType || product.authenticityNote || product.occasion) {
+        return {
+          error: 'Fragrance decants are not available for checkout while testing is underway.',
+          status: 400,
+        }
       }
 
       if (item.variantId) {

@@ -26,6 +26,7 @@ function Cart({ smellsLikeEm = false }) {
   const wrap = (content) =>
     smellsLikeEm ? <SmellsLikeEmLayout>{content}</SmellsLikeEmLayout> : content
 
+  const [loading, setLoading] = useState(false)
   const [shippingSettings, setShippingSettings] = useState(DEFAULT_SHIPPING_SETTINGS)
 
   useEffect(() => {
@@ -76,6 +77,34 @@ function Cart({ smellsLikeEm = false }) {
     ? 'Finalized during checkout'
     : '$0.00'
 
+  async function handleCheckout() {
+    try {
+      setLoading(true)
+      localStorage.setItem('checkout_cart', JSON.stringify(cartItems))
+      localStorage.setItem('checkout_total', JSON.stringify(subtotal))
+
+      const response = await fetch(`${API_BASE_URL}/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cartItems }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong.')
+      }
+
+      window.location.href = data.url
+    } catch (error) {
+      console.error('Checkout failed:', error)
+      alert(error.message || 'Unable to start checkout.')
+    } finally {
+      setLoading(false)
+    }
+  }
   return wrap(
     <section className="section">
       <div className="container">
@@ -84,7 +113,7 @@ function Cart({ smellsLikeEm = false }) {
             {!smellsLikeEm && <SunGraphic className="page-sun" />}
             <h1>Your Cart</h1>
             <p className="section-subtext">
-              Online checkout is temporarily paused while the fragrance catalog is being finalized.
+              Review your items before checkout.
             </p>
           </div>
 
@@ -165,14 +194,18 @@ function Cart({ smellsLikeEm = false }) {
                 <span>Items Total</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
-              <button className="btn checkout-btn" type="button" disabled>
-                Checkout Paused
+              <button
+                className="btn checkout-btn"
+                onClick={handleCheckout}
+                disabled={loading}
+              >
+                {loading ? 'Redirecting...' : 'Proceed to Checkout'}
               </button>
 
               <p className="summary-note">
-                Online ordering is temporarily disabled while the catalog is
-                being finalized. You can still browse scents, sizes, and prices
-                for now.
+                Stripe will show your shipping choice and any final checkout
+                adjustments before payment. Each product can carry its own
+                shipping setting from the admin panel.
               </p>
             </aside>
           </div>
