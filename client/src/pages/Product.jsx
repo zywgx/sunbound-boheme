@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import { useCart } from '../context/useCart'
-import { FALLBACK_PRODUCT_IMAGE, FRAGRANCE_FALLBACK_IMAGE } from '../utils/productDisplay'
+import {
+  FALLBACK_PRODUCT_IMAGE,
+  FRAGRANCE_FALLBACK_IMAGE,
+  getFragranceArt,
+} from '../utils/productDisplay'
 import SmellsLikeEmLayout from '../components/SmellsLikeEmLayout'
 import { buildApiUrl } from '../lib/api'
 
@@ -13,7 +17,7 @@ function Product({ smellsLikeEm = false }) {
   const { id } = useParams()
   const { addToCart } = useCart()
   const backTo = smellsLikeEm ? '/fragrances' : '/shop'
-  const backLabel = smellsLikeEm ? '<- Back to Smells Like Em' : '<- Back to Shop'
+  const backLabel = smellsLikeEm ? '← Back to Smells Like Em' : '<- Back to Shop'
   const wrap = (content) =>
     smellsLikeEm ? <SmellsLikeEmLayout>{content}</SmellsLikeEmLayout> : content
   const fallbackImg = smellsLikeEm ? FRAGRANCE_FALLBACK_IMAGE : FALLBACK_PRODUCT_IMAGE
@@ -31,7 +35,9 @@ function Product({ smellsLikeEm = false }) {
         setError('')
         const response = await axios.get(buildApiUrl(`/products/${id}`))
         setProduct(response.data)
-        setSelectedImage(response.data.imageUrl || fallbackImg)
+        setSelectedImage(
+          (smellsLikeEm && getFragranceArt(response.data)) || response.data.imageUrl || fallbackImg
+        )
       } catch (err) {
         console.error('Failed to fetch product:', err)
         setError('Product not found.')
@@ -84,11 +90,15 @@ function Product({ smellsLikeEm = false }) {
     ? Number(selectedVariant?.quantity ?? 0)
     : Number(product.quantity)
   const isOutOfStock = activeStock <= 0
-  const galleryImages = [
-    product.imageUrl,
-    ...(Array.isArray(product.galleryImages) ? product.galleryImages : []),
-  ].filter((imageUrl, index, images) => imageUrl && images.indexOf(imageUrl) === index)
-  const activeImage = selectedImage || product.imageUrl || fallbackImg
+  // Scents with an illustration show only that, never the old uploaded photos.
+  const fragranceArt = smellsLikeEm ? getFragranceArt(product) : ''
+  const galleryImages = fragranceArt
+    ? [fragranceArt]
+    : [
+        product.imageUrl,
+        ...(Array.isArray(product.galleryImages) ? product.galleryImages : []),
+      ].filter((imageUrl, index, images) => imageUrl && images.indexOf(imageUrl) === index)
+  const activeImage = fragranceArt || selectedImage || product.imageUrl || fallbackImg
   const fragranceNotes = product.fragranceNotes || null
 
   return wrap(
@@ -97,7 +107,7 @@ function Product({ smellsLikeEm = false }) {
         <div className="product-image-wrapper">
           <img
             src={activeImage}
-            alt={product.name}
+            alt={smellsLikeEm ? `${product.brand ? `${product.brand} ` : ''}${product.name} bottle` : product.name}
             className="product-detail-image"
             onError={(event) => {
               event.currentTarget.onerror = null

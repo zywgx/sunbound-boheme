@@ -3049,3 +3049,166 @@ img {
 .sle-theme .product-review-panel span {
   color: var(--sle-olive-deep);
 }
+
+/* ============================================================
+   Smells Like Em - bottle illustrations + phone layout
+   ============================================================ */
+
+/* Section links (#reviews etc.) should not hide under the sticky header. */
+.sle-theme [id] {
+  scroll-margin-top: 84px;
+}
+
+.sle-brand {
+  white-space: nowrap;
+}
+
+/* The illustrations carry their own backdrop, so let them fill the frame. */
+.sle-review-image {
+  padding: 0;
+  background: var(--sle-cream);
+}
+
+.sle-review-image img {
+  object-fit: cover;
+}
+
+.sle-theme .product-image-wrapper {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.sle-theme .product-detail-image {
+  min-height: 0;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border-radius: 18px;
+  border: 1px solid var(--sle-line);
+}
+
+@media (max-width: 720px) {
+  .sle-header {
+    padding: 0.7rem 0 0.55rem;
+  }
+
+  .sle-nav-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .sle-brand {
+    font-size: 1.25rem;
+  }
+
+  /* One swipeable row of links instead of a squashed, overflowing bar. */
+  .sle-nav {
+    width: 100%;
+    gap: 0.85rem;
+    font-size: 0.86rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    padding-bottom: 0.15rem;
+  }
+
+  .sle-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sle-home-link {
+    padding-left: 0.85rem;
+  }
+
+  .sle-theme [id] {
+    scroll-margin-top: 96px;
+  }
+
+  .sle-hero {
+    padding: 2.6rem 0 3rem;
+  }
+
+  .sle-section {
+    padding: 2.4rem 0;
+  }
+
+  .sle-section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .sle-shelf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  .sle-shelf-card {
+    padding: 0.9rem;
+  }
+
+  /* Review cards: picture beside the text instead of a full-screen block. */
+  .sle-review-grid {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .sle-review-card {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .sle-review-image {
+    flex: 0 0 36%;
+    align-self: center;
+    aspect-ratio: 4 / 5;
+    margin: 0.6rem 0 0.6rem 0.6rem;
+    border-radius: 12px;
+  }
+
+  .sle-review-body {
+    min-width: 0;
+    padding: 0.8rem 0.85rem 0.9rem;
+    gap: 0.25rem;
+  }
+
+  .sle-review-body h3 {
+    font-size: 1.02rem;
+  }
+
+  .sle-review-take {
+    padding: 0.55rem 0.6rem;
+  }
+
+  .sle-review-take span {
+    margin-bottom: 0.2rem;
+  }
+
+  .sle-review-take p {
+    font-size: 0.84rem;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .sle-note-chips {
+    display: none;
+  }
+
+  .sle-scent-tags span:nth-child(n + 4) {
+    display: none;
+  }
+
+  .sle-review-price {
+    font-size: 0.92rem;
+  }
+
+  .sle-theme .product-image-wrapper {
+    max-width: 340px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg108" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#7a2a24" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh109" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g104" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#050506" stop-opacity="1"/><stop offset="0.18" stop-color="#1a1a1d" stop-opacity="1"/><stop offset="0.34" stop-color="#45454c" stop-opacity="1"/><stop offset="0.55" stop-color="#1a1a1d" stop-opacity="1"/><stop offset="0.86" stop-color="#1a1a1d" stop-opacity="1"/><stop offset="1" stop-color="#050506" stop-opacity="1"/></linearGradient>
+<linearGradient id="g105" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3e100c" stop-opacity="1"/><stop offset="0.18" stop-color="#7a2a24" stop-opacity="1"/><stop offset="0.34" stop-color="#b8544a" stop-opacity="1"/><stop offset="0.55" stop-color="#7a2a24" stop-opacity="1"/><stop offset="0.86" stop-color="#7a2a24" stop-opacity="1"/><stop offset="1" stop-color="#3e100c" stop-opacity="1"/></linearGradient>
+<linearGradient id="g106" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#08080a" stop-opacity="1"/><stop offset="0.18" stop-color="#1d1d20" stop-opacity="1"/><stop offset="0.34" stop-color="#4a4a50" stop-opacity="1"/><stop offset="0.55" stop-color="#1d1d20" stop-opacity="1"/><stop offset="0.86" stop-color="#1d1d20" stop-opacity="1"/><stop offset="1" stop-color="#08080a" stop-opacity="1"/></linearGradient>
+<clipPath id="c107"><rect x="200" y="320" width="200" height="320" rx="20"/></clipPath>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg108)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh109)"/>
+
+<rect x="212" y="170" width="176" height="60" rx="14" fill="url(#g106)"/>
+<rect x="208" y="216" width="184" height="18" rx="9" fill="url(#g106)" stroke="#4a4a50" stroke-opacity="0.35"/><rect x="208" y="238" width="184" height="18" rx="9" fill="url(#g106)" stroke="#4a4a50" stroke-opacity="0.35"/><rect x="208" y="260" width="184" height="18" rx="9" fill="url(#g106)" stroke="#4a4a50" stroke-opacity="0.35"/><rect x="208" y="282" width="184" height="18" rx="9" fill="url(#g106)" stroke="#4a4a50" stroke-opacity="0.35"/>
+<rect x="200" y="320" width="200" height="320" rx="20" fill="url(#g104)"/>
+<g clip-path="url(#c107)"><rect x="200" y="544" width="200" height="96" fill="url(#g105)"/></g>
+<rect x="216" y="340" width="10" height="240" rx="5" fill="#ffffff" opacity="0.18"/>
+<text x="300" y="440" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="400" letter-spacing="4" fill="#c9554a" opacity="1">MUSAMAM</text>
+<text x="300" y="466" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="12" font-weight="400" letter-spacing="4" fill="#e9e2dc" opacity="1">BLACK INTENSE</text>
+<text x="300" y="496" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="11" font-weight="400" letter-spacing="5" fill="#e9e2dc" opacity="0.8">LATTAFA</text>
+</svg>

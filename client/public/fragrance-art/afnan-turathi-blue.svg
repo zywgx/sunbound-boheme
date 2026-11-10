@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg119" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#3a63c0" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh120" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g116" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#122656" stop-opacity="1"/><stop offset="0.18" stop-color="#2a4f9e" stop-opacity="1"/><stop offset="0.34" stop-color="#6f97e8" stop-opacity="1"/><stop offset="0.55" stop-color="#2a4f9e" stop-opacity="1"/><stop offset="0.86" stop-color="#2a4f9e" stop-opacity="1"/><stop offset="1" stop-color="#122656" stop-opacity="1"/></linearGradient>
+<linearGradient id="g117" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f737a" stop-opacity="1"/><stop offset="0.18" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.34" stop-color="#f4f5f7" stop-opacity="1"/><stop offset="0.55" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.86" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="1" stop-color="#6f737a" stop-opacity="1"/></linearGradient>
+<clipPath id="c118"><path d="M240 300 C 230 340, 150 360, 150 450 C 150 550, 190 620, 230 640 H 370 C 410 620, 450 550, 450 450 C 450 360, 370 340, 360 300 Z"/></clipPath>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg119)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh120)"/>
+
+<rect x="280" y="278" width="40" height="26" fill="url(#g117)"/>
+<path d="M266 280 C 270 240, 230 210, 242 186 C 270 198, 280 180, 300 180 C 320 180, 330 198, 358 186 C 370 210, 330 240, 334 280 Z" fill="url(#g117)"/>
+<path d="M240 300 C 230 340, 150 360, 150 450 C 150 550, 190 620, 230 640 H 370 C 410 620, 450 550, 450 450 C 450 360, 370 340, 360 300 Z" fill="url(#g116)"/>
+<g clip-path="url(#c118)"><rect x="180" y="390" width="12" height="170" rx="6" fill="#ffffff" opacity="0.3"/></g>
+<path d="M240 300 C 230 340, 150 360, 150 450 C 150 550, 190 620, 230 640 H 370 C 410 620, 450 550, 450 450 C 450 360, 370 340, 360 300 Z" fill="none" stroke="#000" stroke-opacity="0.2" stroke-width="2"/>
+<text x="300" y="500" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="400" letter-spacing="4" fill="#e9f0ff" opacity="1">TURATHI</text>
+<text x="300" y="590" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="12" font-weight="400" letter-spacing="5" fill="#e9f0ff" opacity="0.8">AFNAN</text>
+</svg>

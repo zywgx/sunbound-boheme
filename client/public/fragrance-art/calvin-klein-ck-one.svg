@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg90" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#a9b4a2" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh91" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g88" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b9c0b6" stop-opacity="1"/><stop offset="0.18" stop-color="#e8ece6" stop-opacity="1"/><stop offset="0.34" stop-color="#ffffff" stop-opacity="1"/><stop offset="0.55" stop-color="#e8ece6" stop-opacity="1"/><stop offset="0.86" stop-color="#e8ece6" stop-opacity="1"/><stop offset="1" stop-color="#b9c0b6" stop-opacity="1"/></linearGradient>
+<linearGradient id="g89" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f737a" stop-opacity="1"/><stop offset="0.18" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.34" stop-color="#f4f5f7" stop-opacity="1"/><stop offset="0.55" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.86" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="1" stop-color="#6f737a" stop-opacity="1"/></linearGradient>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg90)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh91)"/>
+
+<rect x="272" y="284" width="56" height="50" rx="4" fill="url(#g89)"/>
+<rect x="284" y="268" width="32" height="18" rx="2" fill="url(#g89)"/>
+<path d="M260 330 C 240 360, 170 380, 170 450 V 610 Q 170 640, 200 640 H 400 Q 430 640, 430 610 V 450 C 430 380, 360 360, 340 330 Z" fill="url(#g88)" opacity="0.95"/>
+<rect x="190" y="440" width="12" height="150" rx="6" fill="#ffffff" opacity="0.6"/>
+<path d="M260 330 C 240 360, 170 380, 170 450 V 610 Q 170 640, 200 640 H 400 Q 430 640, 430 610 V 450 C 430 380, 360 360, 340 330 Z" fill="none" stroke="#000" stroke-opacity="0.14" stroke-width="2"/>
+<text x="300" y="540" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="96" font-weight="400" letter-spacing="-2" fill="#1d1d1f" opacity="1">ck</text>
+<text x="330" y="566" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="400" letter-spacing="1" fill="#1d1d1f" opacity="1">one</text>
+<text x="300" y="616" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="400" letter-spacing="4" fill="#1d1d1f" opacity="0.7">CALVIN KLEIN</text>
+</svg>
