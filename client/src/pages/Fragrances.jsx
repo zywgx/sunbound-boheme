@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useCart } from '../context/useCart'
-import { FRAGRANCE_FALLBACK_IMAGE, getProductPath, isFragranceProduct } from '../utils/productDisplay'
+import { Link, useLocation } from 'react-router-dom'
+import SmellsLikeEmLayout from '../components/SmellsLikeEmLayout'
+import {
+  FRAGRANCE_FALLBACK_IMAGE,
+  getFragranceImage,
+  getProductPath,
+  isFragranceProduct,
+} from '../utils/productDisplay'
 import { buildApiUrl } from '../lib/api'
 
 const API_URL = buildApiUrl('/products')
@@ -71,30 +76,8 @@ function fromPrice(product) {
   return Number(product.price)
 }
 
-function SmellsLikeEmHeader({ cartCount }) {
-  return (
-    <header className="sle-header">
-      <div className="sle-container sle-nav-wrapper">
-        <Link to="/fragrances" className="sle-brand">
-          Smells Like Em
-        </Link>
-        <nav className="sle-nav">
-          <a href="#shelf">Categories</a>
-          <a href="#reviews">Reviews</a>
-          <a href="#about">About</a>
-          <a href="#contact">Inquiries</a>
-          <Link to="/" className="sle-home-link">Sunbound Boheme {'->'}</Link>
-          <Link to="/fragrances/cart" className="sle-cart-link">
-            Cart{cartCount > 0 ? ` (${cartCount})` : ''}
-          </Link>
-        </nav>
-      </div>
-    </header>
-  )
-}
-
 function Fragrances() {
-  const { cartCount } = useCart()
+  const { hash } = useLocation()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeOccasion, setActiveOccasion] = useState(null)
@@ -127,9 +110,21 @@ function Fragrances() {
     fetchProducts()
   }, [])
 
+  // Section links like /fragrances#reviews come from the header on every
+  // fragrance page. React Router does not scroll to them on its own, and the
+  // review list only has its full height once products load.
+  useEffect(() => {
+    if (!hash || loading) {
+      return
+    }
+    const target = document.getElementById(hash.slice(1))
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [hash, loading])
+
   return (
-    <div className="sle-theme">
-      <SmellsLikeEmHeader cartCount={cartCount} />
+    <SmellsLikeEmLayout>
 
       <section className="sle-hero">
         <div className="sle-container">
@@ -201,8 +196,12 @@ function Fragrances() {
                 >
                   <div className="sle-review-image">
                     <img
-                      src={product.imageUrl || FRAGRANCE_FALLBACK_IMAGE}
-                      alt={product.name}
+                      src={getFragranceImage(product)}
+                      alt={`${product.brand ? `${product.brand} ` : ''}${product.name} bottle`}
+                      width="510"
+                      height="638"
+                      loading="lazy"
+                      decoding="async"
                       onError={(event) => {
                         event.currentTarget.onerror = null
                         event.currentTarget.src = FRAGRANCE_FALLBACK_IMAGE
@@ -305,17 +304,7 @@ function Fragrances() {
         </div>
       </section>
 
-      <footer className="sle-footer">
-        <div className="sle-container">
-          <p>Smells Like Em - honest fragrance reviews & decants.</p>
-          <p className="sle-muted">
-            Part of the{' '}
-            <Link to="/" className="sle-footer-link">Sunbound Boheme</Link>{' '}
-            family. Scents sold as decants only.
-          </p>
-        </div>
-      </footer>
-    </div>
+    </SmellsLikeEmLayout>
   )
 }
 

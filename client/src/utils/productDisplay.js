@@ -1,3 +1,5 @@
+import fragranceArt from '../data/fragrance-art.json'
+
 export const FALLBACK_PRODUCT_IMAGE =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(`
@@ -26,6 +28,30 @@ export const FRAGRANCE_FALLBACK_IMAGE =
       </text>
     </svg>
   `)
+
+// Original bottle illustrations (see client/scripts/generate-fragrance-art.mjs).
+// They replace the uploaded fragrance photos everywhere on Smells Like Em.
+const fragranceArtSlugs = new Set(fragranceArt)
+
+function fragranceSlug(product) {
+  if (product?.slug) {
+    return product.slug
+  }
+  return `${product?.brand || ''}-${product?.name || ''}`
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+export function getFragranceArt(product) {
+  const slug = fragranceSlug(product)
+  return fragranceArtSlugs.has(slug) ? `/fragrance-art/${slug}.svg` : ''
+}
+
+export function getFragranceImage(product) {
+  return getFragranceArt(product) || product?.imageUrl || FRAGRANCE_FALLBACK_IMAGE
+}
 
 export function getProductPath(product) {
   const identifier = product.slug || product.id

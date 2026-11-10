@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg163" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#3d63c4" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh164" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g159" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#142a6e" stop-opacity="1"/><stop offset="0.18" stop-color="#2d4fb8" stop-opacity="1"/><stop offset="0.34" stop-color="#7b9cf2" stop-opacity="1"/><stop offset="0.55" stop-color="#2d4fb8" stop-opacity="1"/><stop offset="0.86" stop-color="#2d4fb8" stop-opacity="1"/><stop offset="1" stop-color="#142a6e" stop-opacity="1"/></linearGradient>
+<linearGradient id="g160" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a24" stop-opacity="1"/><stop offset="0.18" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.34" stop-color="#f6e3a6" stop-opacity="1"/><stop offset="0.55" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.86" stop-color="#c9a24a" stop-opacity="1"/><stop offset="1" stop-color="#8a6a24" stop-opacity="1"/></linearGradient>
+<linearGradient id="g161" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a24" stop-opacity="1"/><stop offset="0.18" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.34" stop-color="#f6e3a6" stop-opacity="1"/><stop offset="0.55" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.86" stop-color="#c9a24a" stop-opacity="1"/><stop offset="1" stop-color="#8a6a24" stop-opacity="1"/></linearGradient>
+<clipPath id="c162"><rect x="170" y="360" width="260" height="280" rx="10"/></clipPath>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg163)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh164)"/>
+
+<rect x="278" y="340" width="44" height="24" rx="3" fill="url(#g161)"/>
+<rect x="265" y="260" width="70" height="82" rx="6" fill="url(#g160)"/><ellipse cx="300" cy="264" rx="33" ry="5" fill="#f6e3a6" opacity="0.35"/>
+<rect x="170" y="360" width="260" height="280" rx="10" fill="url(#g159)"/>
+<g clip-path="url(#c162)"></g>
+<rect x="188" y="378" width="12" height="220" rx="6" fill="#ffffff" opacity="0.35"/>
+<rect x="170" y="360" width="260" height="280" rx="10" fill="none" stroke="#000" stroke-opacity="0.18" stroke-width="2"/>
+
+
+<path d="M220 430 c 40 -30, 80 30, 120 0 s 40 40, 0 70 s -90 10, -60 50 s 90 20, 100 -20" fill="none" stroke="#dfe7ff" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+<path d="M240 520 c 20 20, 60 20, 90 -10" fill="none" stroke="#dfe7ff" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+<text x="300" y="590" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" font-weight="400" letter-spacing="6" fill="#ffffff" opacity="1">RAYHAAN</text>
+<text x="300" y="614" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="12" font-weight="400" letter-spacing="6" fill="#ffffff" opacity="0.85">PACIFIC</text>
+</svg>

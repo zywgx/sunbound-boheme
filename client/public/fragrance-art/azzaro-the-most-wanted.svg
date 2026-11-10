@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg79" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#b5482a" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh80" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g75" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#050506" stop-opacity="1"/><stop offset="0.18" stop-color="#1b1b1e" stop-opacity="1"/><stop offset="0.34" stop-color="#45454c" stop-opacity="1"/><stop offset="0.55" stop-color="#1b1b1e" stop-opacity="1"/><stop offset="0.86" stop-color="#1b1b1e" stop-opacity="1"/><stop offset="1" stop-color="#050506" stop-opacity="1"/></linearGradient>
+<linearGradient id="g76" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6e2210" stop-opacity="1"/><stop offset="0.18" stop-color="#b5482a" stop-opacity="1"/><stop offset="0.34" stop-color="#e9874f" stop-opacity="1"/><stop offset="0.55" stop-color="#b5482a" stop-opacity="1"/><stop offset="0.86" stop-color="#b5482a" stop-opacity="1"/><stop offset="1" stop-color="#6e2210" stop-opacity="1"/></linearGradient>
+<linearGradient id="g77" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#08080a" stop-opacity="1"/><stop offset="0.18" stop-color="#1d1d20" stop-opacity="1"/><stop offset="0.34" stop-color="#4a4a50" stop-opacity="1"/><stop offset="0.55" stop-color="#1d1d20" stop-opacity="1"/><stop offset="0.86" stop-color="#1d1d20" stop-opacity="1"/><stop offset="1" stop-color="#08080a" stop-opacity="1"/></linearGradient>
+<clipPath id="c78"><rect x="185" y="340" width="230" height="300" rx="44"/></clipPath>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg79)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh80)"/>
+
+<rect x="250" y="230" width="100" height="116" rx="12" fill="url(#g77)"/>
+<rect x="185" y="340" width="230" height="300" rx="44" fill="url(#g76)"/>
+<g clip-path="url(#c78)"><rect x="185" y="340" width="230" height="174" fill="url(#g75)"/>
+<rect x="185" y="514" width="230" height="4" fill="#d9d9de" opacity="0.6"/></g>
+<rect x="205" y="526" width="10" height="90" rx="5" fill="#ffffff" opacity="0.35"/>
+<text x="300" y="450" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" font-weight="400" letter-spacing="5" fill="#d9d9de" opacity="1">THE MOST</text>
+<text x="300" y="480" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="22" font-weight="400" letter-spacing="5" fill="#d9d9de" opacity="1">WANTED</text>
+<text x="300" y="566" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="12" font-weight="400" letter-spacing="6" fill="#fff2e6" opacity="1">AZZARO</text>
+</svg>

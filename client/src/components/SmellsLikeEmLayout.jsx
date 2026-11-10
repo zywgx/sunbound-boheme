@@ -1,10 +1,22 @@
-import { Link } from 'react-router-dom'
-import { useCart } from '../context/useCart'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 // Shared chrome for the Smells Like Em fragrance brand. Wraps any page in the
 // green + cream theme with its own header and footer.
+//
+// There is no cart link while fragrance checkout is paused: decants cannot be
+// added to the cart yet, so the cart would only ever show Sunbound items.
 function SmellsLikeEmLayout({ children }) {
-  const { cartCount } = useCart()
+  const { pathname, hash } = useLocation()
+
+  // Start each fragrance page at the top unless a section link (#reviews etc.)
+  // asked for a specific spot. Without this, opening a scent from far down the
+  // list lands you halfway down the product page on phones.
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0)
+    }
+  }, [pathname, hash])
 
   return (
     <div className="sle-theme">
@@ -13,14 +25,12 @@ function SmellsLikeEmLayout({ children }) {
           <Link to="/fragrances" className="sle-brand">
             Smells Like Em
           </Link>
-          <nav className="sle-nav">
+          <nav className="sle-nav" aria-label="Smells Like Em">
             <Link to="/fragrances#shelf">Categories</Link>
             <Link to="/fragrances#reviews">Reviews</Link>
             <Link to="/fragrances#about">About</Link>
-            <Link to="/" className="sle-home-link">Sunbound Boheme ↗</Link>
-            <Link to="/fragrances/cart" className="sle-cart-link">
-              Cart{cartCount > 0 ? ` (${cartCount})` : ''}
-            </Link>
+            <Link to="/fragrances#contact">Inquiries</Link>
+            <Link to="/" className="sle-home-link">Sunbound Boheme →</Link>
           </nav>
         </div>
       </header>

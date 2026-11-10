@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg149" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#55585e" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh150" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g143" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#060607" stop-opacity="1"/><stop offset="0.18" stop-color="#1c1c20" stop-opacity="1"/><stop offset="0.34" stop-color="#45454c" stop-opacity="1"/><stop offset="0.55" stop-color="#1c1c20" stop-opacity="1"/><stop offset="0.86" stop-color="#1c1c20" stop-opacity="1"/><stop offset="1" stop-color="#060607" stop-opacity="1"/></linearGradient>
+<linearGradient id="g144" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a2c30" stop-opacity="1"/><stop offset="0.18" stop-color="#55585e" stop-opacity="1"/><stop offset="0.34" stop-color="#9a9ea6" stop-opacity="1"/><stop offset="0.55" stop-color="#55585e" stop-opacity="1"/><stop offset="0.86" stop-color="#55585e" stop-opacity="1"/><stop offset="1" stop-color="#2a2c30" stop-opacity="1"/></linearGradient>
+<linearGradient id="g145" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a2c30" stop-opacity="1"/><stop offset="0.18" stop-color="#55585e" stop-opacity="1"/><stop offset="0.34" stop-color="#9a9ea6" stop-opacity="1"/><stop offset="0.55" stop-color="#55585e" stop-opacity="1"/><stop offset="0.86" stop-color="#55585e" stop-opacity="1"/><stop offset="1" stop-color="#2a2c30" stop-opacity="1"/></linearGradient>
+<pattern id="p146" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M17 0 L34 17 L17 34 L0 17 Z M0 0 L34 34 M34 0 L0 34 M17 0 V34 M0 17 H34" fill="none" stroke="#55585e" stroke-width="3"/><circle cx="17" cy="17" r="5.666666666666667" fill="none" stroke="#55585e" stroke-width="2.4000000000000004"/></pattern>
+<pattern id="p147" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 0 L20 10 L10 20 L0 10 Z M0 0 L20 20 M20 0 L0 20 M10 0 V20 M0 10 H20" fill="none" stroke="#2a2c30" stroke-width="2"/><circle cx="10" cy="10" r="3.3333333333333335" fill="none" stroke="#2a2c30" stroke-width="1.6"/></pattern>
+<clipPath id="c148"><rect x="165" y="350" width="270" height="290" rx="14"/></clipPath>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg149)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh150)"/>
+
+<rect x="276" y="328" width="48" height="26" fill="url(#g145)"/>
+<rect x="254" y="222" width="92" height="108" rx="4" fill="url(#g145)"/>
+<rect x="262" y="230" width="76" height="92" fill="url(#p147)" opacity="0.8"/>
+<rect x="165" y="350" width="270" height="290" rx="14" fill="url(#g143)"/>
+<g clip-path="url(#c148)"><rect x="165" y="350" width="270" height="290" fill="url(#p146)" opacity="0.95"/></g>
+<rect x="171" y="356" width="258" height="278" rx="10" fill="none" stroke="#55585e" stroke-width="10"/>
+<rect x="187" y="372" width="10" height="210" rx="5" fill="#ffffff" opacity="0.25"/>
+<rect x="204" y="461" width="192" height="74" rx="4" fill="#2a2c30" opacity="0.92"/>
+<text x="300" y="493" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="400" letter-spacing="5" fill="#9a9ea6" opacity="1">RAYHAAN</text>
+<text x="300" y="521" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" font-weight="400" letter-spacing="5" fill="#9a9ea6" opacity="1">OBSIDIAN</text>
+</svg>

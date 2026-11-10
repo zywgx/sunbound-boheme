@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg59" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#d9b0b8" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh60" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g55" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c4b2b8" stop-opacity="1"/><stop offset="0.18" stop-color="#efe3e6" stop-opacity="1"/><stop offset="0.34" stop-color="#ffffff" stop-opacity="1"/><stop offset="0.55" stop-color="#efe3e6" stop-opacity="1"/><stop offset="0.86" stop-color="#efe3e6" stop-opacity="1"/><stop offset="1" stop-color="#c4b2b8" stop-opacity="1"/></linearGradient>
+<linearGradient id="g56" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d49ea8" stop-opacity="1"/><stop offset="0.18" stop-color="#f2c9cf" stop-opacity="1"/><stop offset="0.34" stop-color="#fde6ea" stop-opacity="1"/><stop offset="0.55" stop-color="#f2c9cf" stop-opacity="1"/><stop offset="0.86" stop-color="#f2c9cf" stop-opacity="1"/><stop offset="1" stop-color="#d49ea8" stop-opacity="1"/></linearGradient>
+<linearGradient id="g57" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a24" stop-opacity="1"/><stop offset="0.18" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.34" stop-color="#f6e3a6" stop-opacity="1"/><stop offset="0.55" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.86" stop-color="#c9a24a" stop-opacity="1"/><stop offset="1" stop-color="#8a6a24" stop-opacity="1"/></linearGradient>
+<clipPath id="c58"><path d="M200 360 H 410 L 430 480 L 412 640 H 182 L 168 500 Z"/></clipPath>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg59)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh60)"/>
+
+<rect x="276" y="338" width="48" height="26" fill="url(#g57)"/>
+<path d="M208 338 L 220 264 L 396 232 L 392 338 Z" fill="url(#g57)"/>
+<path d="M220 264 L 310 300 L 396 232 M310 300 V 338" stroke="#8a6a24" stroke-width="2" fill="none" opacity="0.5"/>
+<path d="M200 360 H 410 L 430 480 L 412 640 H 182 L 168 500 Z" fill="url(#g55)"/>
+<g clip-path="url(#c58)">
+<rect x="160" y="390" width="280" height="260" fill="url(#g56)" opacity="0.8"/>
+<path d="M200 360 L 280 470 L 430 480 M280 470 L 168 500 M280 470 L 320 640 M410 360 L 280 470" stroke="#ffffff" stroke-width="3" fill="none" opacity="0.65"/>
+</g>
+<path d="M200 360 H 410 L 430 480 L 412 640 H 182 L 168 500 Z" fill="none" stroke="#000" stroke-opacity="0.15" stroke-width="2"/>
+<rect x="234" y="528" width="132" height="52" rx="3" fill="#ffffff" opacity="0.75"/>
+<text x="300" y="558" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="400" letter-spacing="5" fill="#6a4c52" opacity="1">AETHER</text>
+<text x="300" y="574" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="10" font-weight="400" letter-spacing="5" fill="#6a4c52" opacity="1">EXTRAIT</text>
+</svg>

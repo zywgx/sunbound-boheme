@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg53" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#c99a54" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh54" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g51" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6e4c22" stop-opacity="1"/><stop offset="0.18" stop-color="#b88a4e" stop-opacity="1"/><stop offset="0.34" stop-color="#f1d49a" stop-opacity="1"/><stop offset="0.55" stop-color="#b88a4e" stop-opacity="1"/><stop offset="0.86" stop-color="#b88a4e" stop-opacity="1"/><stop offset="1" stop-color="#6e4c22" stop-opacity="1"/></linearGradient>
+<linearGradient id="g52" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a6a24" stop-opacity="1"/><stop offset="0.18" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.34" stop-color="#f6e3a6" stop-opacity="1"/><stop offset="0.55" stop-color="#c9a24a" stop-opacity="1"/><stop offset="0.86" stop-color="#c9a24a" stop-opacity="1"/><stop offset="1" stop-color="#8a6a24" stop-opacity="1"/></linearGradient>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg53)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh54)"/>
+
+<rect x="278" y="274" width="44" height="30" fill="url(#g52)"/>
+<path d="M256 274 V 200 C 256 150, 344 150, 344 200 V 274 Z" fill="url(#g52)"/>
+<rect x="260" y="182" width="80" height="5" rx="2" fill="#8a6a24" opacity="0.5"/><rect x="260" y="195" width="80" height="5" rx="2" fill="#8a6a24" opacity="0.5"/><rect x="260" y="208" width="80" height="5" rx="2" fill="#8a6a24" opacity="0.5"/><rect x="260" y="221" width="80" height="5" rx="2" fill="#8a6a24" opacity="0.5"/><rect x="260" y="234" width="80" height="5" rx="2" fill="#8a6a24" opacity="0.5"/><rect x="260" y="247" width="80" height="5" rx="2" fill="#8a6a24" opacity="0.5"/><rect x="260" y="260" width="80" height="5" rx="2" fill="#8a6a24" opacity="0.5"/>
+<rect x="200" y="300" width="200" height="340" rx="26" fill="url(#g51)"/>
+<rect x="210" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="227" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="244" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="261" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="278" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="295" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="312" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="329" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="346" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="363" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/><rect x="380" y="308" width="8" height="324" rx="4" fill="#000" opacity="0.14"/>
+<rect x="238" y="420" width="124" height="80" rx="4" fill="#2a1d0e" stroke="#f6e3a6" stroke-width="3"/>
+<text x="300" y="460" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="400" letter-spacing="4" fill="#f6e3a6" opacity="1">ARISTO</text>
+<text x="300" y="484" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="9" font-weight="400" letter-spacing="2" fill="#f6e3a6" opacity="1">ARABIYAT PRESTIGE</text>
+</svg>

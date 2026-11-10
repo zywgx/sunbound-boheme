@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg86" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#c8b48a" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh87" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g81" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b6c1c7" stop-opacity="1"/><stop offset="0.18" stop-color="#e6ecef" stop-opacity="1"/><stop offset="0.34" stop-color="#ffffff" stop-opacity="1"/><stop offset="0.55" stop-color="#e6ecef" stop-opacity="1"/><stop offset="0.86" stop-color="#e6ecef" stop-opacity="1"/><stop offset="1" stop-color="#b6c1c7" stop-opacity="1"/></linearGradient>
+<linearGradient id="g82" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9c3b6" stop-opacity="1"/><stop offset="0.18" stop-color="#ece8df" stop-opacity="1"/><stop offset="0.34" stop-color="#ffffff" stop-opacity="1"/><stop offset="0.55" stop-color="#ece8df" stop-opacity="1"/><stop offset="0.86" stop-color="#ece8df" stop-opacity="1"/><stop offset="1" stop-color="#c9c3b6" stop-opacity="1"/></linearGradient>
+<linearGradient id="g83" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f737a" stop-opacity="1"/><stop offset="0.18" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.34" stop-color="#f4f5f7" stop-opacity="1"/><stop offset="0.55" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.86" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="1" stop-color="#6f737a" stop-opacity="1"/></linearGradient>
+<clipPath id="c84"><rect x="215" y="310" width="170" height="330" rx="30"/></clipPath>
+<linearGradient id="g85" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d8b07a" stop-opacity="1"/><stop offset="0.18" stop-color="#f3d6a6" stop-opacity="1"/><stop offset="0.34" stop-color="#fbebcd" stop-opacity="1"/><stop offset="0.55" stop-color="#f3d6a6" stop-opacity="1"/><stop offset="0.86" stop-color="#f3d6a6" stop-opacity="1"/><stop offset="1" stop-color="#d8b07a" stop-opacity="1"/></linearGradient>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg86)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh87)"/>
+
+<rect x="278" y="290" width="44" height="24" rx="3" fill="url(#g83)"/>
+<rect x="235" y="208" width="130" height="84" rx="14" fill="url(#g82)"/><ellipse cx="300" cy="212" rx="63" ry="5" fill="#ffffff" opacity="0.35"/>
+<rect x="215" y="310" width="170" height="330" rx="30" fill="url(#g81)"/>
+<g clip-path="url(#c84)"><rect x="229" y="399" width="142" height="225" rx="22" fill="url(#g85)" opacity="0.9"/></g>
+<rect x="233" y="328" width="12" height="270" rx="6" fill="#ffffff" opacity="0.35"/>
+<rect x="215" y="310" width="170" height="330" rx="30" fill="none" stroke="#000" stroke-opacity="0.18" stroke-width="2"/>
+<text x="300" y="494.8" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="400" letter-spacing="3" fill="#4a3e2c" opacity="1">KAAF</text>
+<text x="300" y="522.8" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="13" font-weight="400" letter-spacing="4" fill="#4a3e2c" opacity="0.8">KHADLAJ</text>
+</svg>

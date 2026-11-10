@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 110 510 638" width="510" height="638">
+<defs>
+<radialGradient id="bg102" cx="50%" cy="38%" r="75%">
+<stop offset="0" stop-color="#fffaf0"/>
+<stop offset="0.55" stop-color="#c7a88e" stop-opacity="0.22"/>
+<stop offset="1" stop-color="#7c8a4c" stop-opacity="0.28"/>
+</radialGradient>
+<radialGradient id="sh103" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#2a3119" stop-opacity="0.32"/>
+<stop offset="1" stop-color="#2a3119" stop-opacity="0"/>
+</radialGradient>
+<linearGradient id="g97" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c9bdb2" stop-opacity="1"/><stop offset="0.18" stop-color="#efe7e0" stop-opacity="1"/><stop offset="0.34" stop-color="#ffffff" stop-opacity="1"/><stop offset="0.55" stop-color="#efe7e0" stop-opacity="1"/><stop offset="0.86" stop-color="#efe7e0" stop-opacity="1"/><stop offset="1" stop-color="#c9bdb2" stop-opacity="1"/></linearGradient>
+<linearGradient id="g98" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a2418" stop-opacity="1"/><stop offset="0.18" stop-color="#6b4430" stop-opacity="1"/><stop offset="0.34" stop-color="#a87a5c" stop-opacity="1"/><stop offset="0.55" stop-color="#6b4430" stop-opacity="1"/><stop offset="0.86" stop-color="#6b4430" stop-opacity="1"/><stop offset="1" stop-color="#3a2418" stop-opacity="1"/></linearGradient>
+<linearGradient id="g99" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6f737a" stop-opacity="1"/><stop offset="0.18" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.34" stop-color="#f4f5f7" stop-opacity="1"/><stop offset="0.55" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="0.86" stop-color="#b9bcc2" stop-opacity="1"/><stop offset="1" stop-color="#6f737a" stop-opacity="1"/></linearGradient>
+<clipPath id="c100"><rect x="200" y="370" width="200" height="270" rx="8"/></clipPath>
+<linearGradient id="g101" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9a888" stop-opacity="1"/><stop offset="0.18" stop-color="#f3cfb6" stop-opacity="1"/><stop offset="0.34" stop-color="#fbe6d8" stop-opacity="1"/><stop offset="0.55" stop-color="#f3cfb6" stop-opacity="1"/><stop offset="0.86" stop-color="#f3cfb6" stop-opacity="1"/><stop offset="1" stop-color="#d9a888" stop-opacity="1"/></linearGradient>
+</defs>
+<rect width="600" height="750" fill="#f4ead6"/>
+<rect width="600" height="750" fill="url(#bg102)"/>
+<ellipse cx="300" cy="646" rx="190" ry="22" fill="url(#sh103)"/>
+
+<rect x="278" y="350" width="44" height="24" rx="3" fill="url(#g99)"/>
+<path d="M245 352 L259 256 H341 L355 352 Z" fill="url(#g98)"/>
+<rect x="200" y="370" width="200" height="270" rx="8" fill="url(#g97)"/>
+<g clip-path="url(#c100)"><rect x="214" y="432" width="172" height="192" rx="4" fill="url(#g101)" opacity="0.9"/></g>
+<rect x="218" y="388" width="12" height="210" rx="6" fill="#ffffff" opacity="0.35"/>
+<rect x="200" y="370" width="200" height="270" rx="8" fill="none" stroke="#000" stroke-opacity="0.18" stroke-width="2"/>
+<text x="300" y="521.2" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="400" letter-spacing="3" fill="#5a4636" opacity="1">BURBERRY</text>
+<text x="300" y="549.2" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="13" font-weight="400" letter-spacing="4" fill="#5a4636" opacity="0.8">TOUCH FOR MEN</text>
+</svg>
